@@ -1,0 +1,2442 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prashikshan – Academia Industry Interface Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+--blue:#2563EB;--blue-dark:#1d4ed8;--blue-light:#dbeafe;
+--navy:#0F172A;--teal:#14B8A6;--teal-light:#ccfbf1;
+--green:#22C55E;--amber:#F59E0B;--red:#EF4444;
+--bg:#F8FAFC;--bg2:#F1F5F9;--bg3:#E2E8F0;
+--surface:#fff;--surface2:#F8FAFC;
+--border:#E2E8F0;--border2:#CBD5E1;
+--text:#0F172A;--text2:#475569;--text3:#94A3B8;
+--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+--shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+--shadow-lg:0 10px 15px rgba(0,0,0,.07),0 4px 6px rgba(0,0,0,.05);
+--shadow-xl:0 20px 25px rgba(0,0,0,.1),0 10px 10px rgba(0,0,0,.04);
+--r:8px;--r-lg:12px;--r-xl:16px;--r-2xl:24px;
+--font:'DM Sans',sans-serif;--font-heading:'Syne',sans-serif;
+--sidebar:260px;--navbar:64px;
+}
+[data-theme="dark"]{
+--bg:#0B0F1A;--bg2:#111827;--bg3:#1E293B;
+--surface:#131C2E;--surface2:#1A2540;
+--border:#1E293B;--border2:#2D3B55;
+--text:#F1F5F9;--text2:#94A3B8;--text3:#64748B;
+--shadow:0 1px 3px rgba(0,0,0,.4);
+--shadow-md:0 4px 6px rgba(0,0,0,.4);
+--shadow-lg:0 10px 15px rgba(0,0,0,.5);
+--blue-light:#1e3a5f;--teal-light:#134e4a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;}
+h1,h2,h3,h4,h5,h6{font-family:var(--font-heading);font-weight:700;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:var(--font);}
+img{max-width:100%;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
+
+/* ===== PAGE ROUTING ===== */
+.page{display:none;}
+.page.active{display:block;}
+.dashboard-layout{display:flex;min-height:100vh;}
+
+/* ===== NAVBAR ===== */
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--navbar);background:var(--surface);border-bottom:1px solid var(--border);z-index:100;display:flex;align-items:center;padding:0 1.5rem;gap:1.5rem;}
+.navbar-brand{display:flex;align-items:center;gap:.6rem;font-family:var(--font-heading);font-size:1.2rem;font-weight:800;color:var(--blue);}
+.navbar-brand span{color:var(--teal);}
+.navbar-logo{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--teal));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;font-weight:800;}
+.navbar-nav{display:flex;align-items:center;gap:.25rem;flex:1;padding:0 2rem;}
+.nav-link{padding:.4rem .8rem;border-radius:6px;font-size:.875rem;font-weight:500;color:var(--text2);transition:all .2s;cursor:pointer;}
+.nav-link:hover,.nav-link.active{background:var(--blue-light);color:var(--blue);}
+.navbar-right{margin-left:auto;display:flex;align-items:center;gap:.75rem;}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border-radius:var(--r);font-size:.875rem;font-weight:500;border:none;transition:all .2s;cursor:pointer;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-primary:hover{background:var(--blue-dark);transform:translateY(-1px);box-shadow:var(--shadow-md);}
+.btn-outline{background:transparent;border:1.5px solid var(--border2);color:var(--text);}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light);}
+.btn-ghost{background:transparent;color:var(--text2);}
+.btn-ghost:hover{background:var(--bg2);color:var(--text);}
+.btn-teal{background:var(--teal);color:#fff;}
+.btn-teal:hover{background:#0d9488;transform:translateY(-1px);}
+.btn-sm{padding:.35rem .7rem;font-size:.8rem;}
+.btn-lg{padding:.75rem 1.75rem;font-size:1rem;}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;flex-shrink:0;}
+.theme-toggle{width:36px;height:36px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:all .2s;}
+.theme-toggle:hover{background:var(--bg3);color:var(--text);}
+.notif-btn{position:relative;width:36px;height:36px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:all .2s;}
+.notif-btn:hover{background:var(--bg3);}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--surface);}
+
+/* ===== SIDEBAR ===== */
+.sidebar{width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);height:100vh;position:fixed;top:var(--navbar);left:0;overflow-y:auto;padding:1rem 0;z-index:90;}
+.sidebar-section{margin-bottom:1.5rem;}
+.sidebar-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);padding:.25rem 1.25rem;margin-bottom:.25rem;}
+.sidebar-item{display:flex;align-items:center;gap:.75rem;padding:.55rem 1.25rem;font-size:.875rem;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s;border-left:3px solid transparent;margin:1px 0;}
+.sidebar-item:hover{background:var(--bg2);color:var(--text);}
+.sidebar-item.active{background:var(--blue-light);color:var(--blue);border-left-color:var(--blue);}
+.sidebar-item i{width:18px;text-align:center;font-size:.95rem;}
+.sidebar-badge{margin-left:auto;background:var(--blue);color:#fff;font-size:.65rem;font-weight:700;padding:.15rem .45rem;border-radius:99px;}
+.sidebar-badge.green{background:var(--green);}
+
+/* ===== MAIN CONTENT ===== */
+.main-content{margin-left:var(--sidebar);padding-top:var(--navbar);flex:1;min-width:0;}
+.content-area{padding:2rem;}
+
+/* ===== LANDING PAGE ===== */
+.landing{margin-top:var(--navbar);}
+
+/* HERO */
+.hero{background:var(--surface);padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -20%,rgba(37,99,235,.08),transparent);}
+[data-theme="dark"] .hero::before{background:radial-gradient(ellipse 80% 60% at 50% -20%,rgba(37,99,235,.15),transparent);}
+.hero-badge{display:inline-flex;align-items:center;gap:.4rem;background:var(--blue-light);color:var(--blue);font-size:.8rem;font-weight:600;padding:.35rem .9rem;border-radius:99px;margin-bottom:1.5rem;border:1px solid rgba(37,99,235,.2);}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.15;color:var(--text);max-width:800px;margin:0 auto 1.25rem;}
+.hero h1 .hl{color:var(--blue);}
+.hero h1 .hl2{color:var(--teal);}
+.hero p{font-size:1.15rem;color:var(--text2);max-width:600px;margin:0 auto 2.5rem;line-height:1.7;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;}
+.hero-stats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:2rem;background:var(--bg2);border-top:1px solid var(--border);}
+.hero-stat{text-align:center;}
+.hero-stat .num{font-family:var(--font-heading);font-size:1.8rem;font-weight:800;color:var(--blue);}
+.hero-stat .lbl{font-size:.8rem;color:var(--text3);margin-top:.2rem;}
+
+/* TRUSTED */
+.trusted{padding:2.5rem 2rem;background:var(--surface);border-top:1px solid var(--border);}
+.trusted-title{text-align:center;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:1.5rem;}
+.logo-strip{display:flex;justify-content:center;align-items:center;gap:2.5rem;flex-wrap:wrap;}
+.logo-pill{padding:.5rem 1.25rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:.8rem;font-weight:600;color:var(--text3);letter-spacing:.03em;}
+
+/* FEATURES */
+.section{padding:5rem 2rem;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.section-header{text-align:center;margin-bottom:3.5rem;}
+.section-tag{display:inline-block;background:var(--teal-light);color:var(--teal);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.3rem .8rem;border-radius:99px;margin-bottom:1rem;}
+.section-tag.blue{background:var(--blue-light);color:var(--blue);}
+.section h2{font-size:clamp(1.8rem,3.5vw,2.8rem);color:var(--text);margin-bottom:.75rem;}
+.section p.sub{font-size:1.05rem;color:var(--text2);max-width:560px;margin:0 auto;}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.75rem;transition:all .25s;cursor:pointer;}
+.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--blue);}
+.feature-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:1.25rem;}
+.fi-blue{background:var(--blue-light);color:var(--blue);}
+.fi-teal{background:var(--teal-light);color:var(--teal);}
+.fi-green{background:#dcfce7;color:var(--green);}
+.fi-amber{background:#fef3c7;color:var(--amber);}
+.fi-red{background:#fee2e2;color:var(--red);}
+[data-theme="dark"] .fi-green{background:#14532d;}
+[data-theme="dark"] .fi-amber{background:#451a03;}
+[data-theme="dark"] .fi-red{background:#450a0a;}
+.feature-card h3{font-size:1.05rem;margin-bottom:.5rem;color:var(--text);}
+.feature-card p{font-size:.875rem;color:var(--text2);line-height:1.6;}
+
+/* TESTIMONIALS */
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem;}
+.testimonial-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.75rem;}
+.testimonial-card .quote{font-size:.95rem;color:var(--text2);line-height:1.7;margin-bottom:1.25rem;font-style:italic;}
+.testimonial-card .author{display:flex;align-items:center;gap:.75rem;}
+.testimonial-card .author .ava{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;}
+.testimonial-card .author .name{font-size:.9rem;font-weight:600;}
+.testimonial-card .author .role{font-size:.8rem;color:var(--text3);}
+.stars{color:#FBBF24;font-size:.85rem;margin-bottom:.75rem;}
+
+/* CTA */
+.cta-section{background:linear-gradient(135deg,var(--navy) 0%,#1e3a5f 100%);padding:5rem 2rem;text-align:center;}
+[data-theme="dark"] .cta-section{background:linear-gradient(135deg,#0B0F1A 0%,#0f2040 100%);}
+.cta-section h2{color:#fff;font-size:clamp(1.8rem,3vw,2.8rem);margin-bottom:1rem;}
+.cta-section p{color:rgba(255,255,255,.7);font-size:1.05rem;max-width:520px;margin:0 auto 2.5rem;}
+.cta-section .btn-white{background:#fff;color:var(--navy);font-weight:600;}
+.cta-section .btn-white:hover{background:#f1f5f9;}
+
+/* FOOTER */
+footer{background:var(--navy);color:rgba(255,255,255,.8);padding:4rem 2rem 2rem;}
+[data-theme="dark"] footer{background:#080D14;}
+.footer-inner{max-width:1200px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+.footer-brand{font-family:var(--font-heading);font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:.75rem;}
+.footer-brand span{color:var(--teal);}
+.footer-desc{font-size:.875rem;color:rgba(255,255,255,.5);line-height:1.7;}
+.footer-col h4{font-size:.875rem;font-weight:700;color:#fff;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.05em;}
+.footer-col a{display:block;font-size:.875rem;color:rgba(255,255,255,.5);margin-bottom:.5rem;transition:color .2s;cursor:pointer;}
+.footer-col a:hover{color:var(--teal);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;font-size:.8rem;color:rgba(255,255,255,.4);}
+.social-links{display:flex;gap:.75rem;}
+.social-link{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);transition:all .2s;cursor:pointer;}
+.social-link:hover{background:var(--blue);color:#fff;}
+
+/* ===== AUTH PAGES ===== */
+.auth-page{min-height:calc(100vh - var(--navbar));display:flex;align-items:center;justify-content:center;padding:2rem;}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-2xl);padding:2.5rem;width:100%;max-width:440px;box-shadow:var(--shadow-xl);}
+.auth-card h2{font-size:1.7rem;margin-bottom:.4rem;}
+.auth-card .sub{color:var(--text2);font-size:.9rem;margin-bottom:2rem;}
+.form-group{margin-bottom:1.25rem;}
+.form-label{display:block;font-size:.85rem;font-weight:500;margin-bottom:.4rem;color:var(--text2);}
+.form-input{width:100%;padding:.65rem 1rem;border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg2);color:var(--text);font-family:var(--font);font-size:.9rem;transition:all .2s;}
+.form-input:focus{outline:none;border-color:var(--blue);background:var(--surface);box-shadow:0 0 0 3px rgba(37,99,235,.12);}
+.form-input::placeholder{color:var(--text3);}
+.input-group{position:relative;}
+.input-group .form-input{padding-left:2.75rem;}
+.input-group i{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--text3);font-size:.9rem;}
+.role-select{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.5rem;}
+.role-btn{padding:.55rem;border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg2);color:var(--text2);font-size:.8rem;font-weight:500;cursor:pointer;transition:all .2s;text-align:center;}
+.role-btn:hover{border-color:var(--blue);color:var(--blue);}
+.role-btn.selected{border-color:var(--blue);background:var(--blue-light);color:var(--blue);}
+.divider{display:flex;align-items:center;gap:1rem;margin:1.25rem 0;color:var(--text3);font-size:.8rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.social-auth{display:flex;gap:.75rem;}
+.social-auth-btn{flex:1;padding:.55rem;border:1.5px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text2);font-size:.85rem;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.social-auth-btn:hover{border-color:var(--blue);background:var(--blue-light);color:var(--blue);}
+.auth-link{font-size:.875rem;color:var(--text2);text-align:center;margin-top:1.25rem;}
+.auth-link a{color:var(--blue);font-weight:600;cursor:pointer;}
+.btn-full{width:100%;justify-content:center;padding:.7rem;}
+
+/* ===== DASHBOARD ===== */
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-bottom:2rem;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem;}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.stat-card .num{font-family:var(--font-heading);font-size:1.6rem;font-weight:800;color:var(--text);line-height:1;}
+.stat-card .label{font-size:.8rem;color:var(--text3);margin-top:.25rem;}
+.stat-card .change{font-size:.75rem;font-weight:600;margin-top:.35rem;}
+.change.up{color:var(--green);}
+.change.down{color:var(--red);}
+
+.dash-row{display:grid;grid-template-columns:2fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+.dash-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;}
+.card-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-header h3{font-size:.95rem;font-weight:700;}
+.card-header .card-action{font-size:.8rem;color:var(--blue);cursor:pointer;font-weight:500;}
+.card-body{padding:1.25rem 1.5rem;}
+
+/* Activity items */
+.activity-item{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--border);}
+.activity-item:last-child{border-bottom:none;}
+.act-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.act-text{flex:1;min-width:0;}
+.act-text .title{font-size:.85rem;font-weight:500;color:var(--text);}
+.act-text .time{font-size:.75rem;color:var(--text3);margin-top:.15rem;}
+
+/* Profile completion */
+.profile-completion{display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--bg2);border-radius:var(--r-lg);margin-bottom:1rem;}
+.profile-circle{width:60px;height:60px;border-radius:50%;background:conic-gradient(var(--blue) 0% 72%,var(--border) 72% 100%);display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
+.profile-circle::before{content:'';width:46px;height:46px;background:var(--bg2);border-radius:50%;position:absolute;}
+.profile-circle span{position:relative;z-index:1;font-size:.75rem;font-weight:800;color:var(--blue);}
+.profile-info h4{font-size:.9rem;font-weight:600;}
+.profile-info p{font-size:.8rem;color:var(--text2);}
+
+/* Progress bars */
+.progress-item{margin-bottom:.85rem;}
+.progress-header{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem;}
+.progress-bar{height:6px;background:var(--bg3);border-radius:99px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:99px;transition:width .6s ease;}
+.pf-blue{background:var(--blue);}
+.pf-teal{background:var(--teal);}
+.pf-green{background:var(--green);}
+.pf-amber{background:var(--amber);}
+
+/* JOB / INTERNSHIP CARDS */
+.opp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.25rem;}
+.opp-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;transition:all .2s;cursor:pointer;}
+.opp-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--blue);}
+.opp-card-top{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem;}
+.company-logo{width:48px;height:48px;border-radius:10px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;flex-shrink:0;}
+.opp-title{font-size:1rem;font-weight:700;margin-bottom:.25rem;color:var(--text);}
+.opp-company{font-size:.85rem;color:var(--text2);}
+.opp-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem;}
+.tag{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .6rem;border-radius:99px;font-size:.75rem;font-weight:500;}
+.tag-blue{background:var(--blue-light);color:var(--blue);}
+.tag-teal{background:var(--teal-light);color:var(--teal);}
+.tag-green{background:#dcfce7;color:#15803d;}
+.tag-amber{background:#fef3c7;color:#92400e;}
+[data-theme="dark"] .tag-green{background:#14532d;color:#4ade80;}
+[data-theme="dark"] .tag-amber{background:#451a03;color:#fcd34d;}
+.opp-meta{display:flex;align-items:center;gap:1.25rem;font-size:.8rem;color:var(--text3);padding-top:1rem;border-top:1px solid var(--border);}
+.opp-meta span{display:flex;align-items:center;gap:.3rem;}
+.opp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1rem;}
+
+/* MENTOR CARDS */
+.mentor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;}
+.mentor-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.5rem;text-align:center;transition:all .2s;}
+.mentor-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.mentor-avatar{width:72px;height:72px;border-radius:50%;margin:0 auto .75rem;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;color:#fff;}
+.mentor-name{font-size:1rem;font-weight:700;margin-bottom:.2rem;}
+.mentor-role{font-size:.85rem;color:var(--text2);margin-bottom:.25rem;}
+.mentor-company{font-size:.8rem;color:var(--text3);margin-bottom:.75rem;}
+.mentor-skills{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin-bottom:1rem;}
+.mentor-rating{font-size:.85rem;color:var(--text2);margin-bottom:1rem;}
+.mentor-rating span{color:#FBBF24;font-weight:600;}
+.mentor-btns{display:flex;gap:.5rem;justify-content:center;}
+
+/* ASSESSMENT */
+.assess-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.25rem;}
+.assess-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;cursor:pointer;transition:all .2s;}
+.assess-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.assess-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;}
+.assess-card h3{font-size:1rem;font-weight:700;margin-bottom:.35rem;}
+.assess-card p{font-size:.85rem;color:var(--text2);margin-bottom:.75rem;}
+.assess-meta{font-size:.8rem;color:var(--text3);}
+.assess-diff{display:inline-block;padding:.15rem .5rem;border-radius:99px;font-size:.7rem;font-weight:600;}
+.diff-easy{background:#dcfce7;color:#15803d;}
+.diff-med{background:#fef3c7;color:#92400e;}
+.diff-hard{background:#fee2e2;color:#b91c1c;}
+[data-theme="dark"] .diff-easy{background:#14532d;color:#4ade80;}
+[data-theme="dark"] .diff-med{background:#451a03;color:#fcd34d;}
+[data-theme="dark"] .diff-hard{background:#450a0a;color:#f87171;}
+
+/* AI CHAT */
+.ai-chat{display:flex;flex-direction:column;height:calc(100vh - var(--navbar) - 4rem);background:var(--surface);border-radius:var(--r-xl);border:1px solid var(--border);overflow:hidden;}
+.chat-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;}
+.ai-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;}
+.chat-messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+.msg{display:flex;gap:.75rem;max-width:80%;}
+.msg.user{align-self:flex-end;flex-direction:row-reverse;}
+.msg-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.msg-bubble{padding:.75rem 1rem;border-radius:var(--r-lg);font-size:.9rem;line-height:1.6;}
+.msg.ai .msg-bubble{background:var(--bg2);color:var(--text);border-bottom-left-radius:4px;}
+.msg.user .msg-bubble{background:var(--blue);color:#fff;border-bottom-right-radius:4px;}
+.chat-input-area{padding:1rem 1.5rem;border-top:1px solid var(--border);}
+.chat-input-wrap{display:flex;gap:.5rem;align-items:flex-end;}
+.chat-input{flex:1;padding:.65rem 1rem;border:1.5px solid var(--border);border-radius:var(--r-lg);background:var(--bg2);color:var(--text);font-family:var(--font);font-size:.9rem;resize:none;max-height:120px;outline:none;transition:border-color .2s;}
+.chat-input:focus{border-color:var(--blue);}
+.chat-send{width:40px;height:40px;border-radius:10px;background:var(--blue);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+.chat-send:hover{background:var(--blue-dark);}
+
+/* CHARTS */
+.chart-container{position:relative;height:280px;}
+.chart-container-sm{position:relative;height:200px;}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{padding:.75rem 1rem;text-align:left;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);border-bottom:2px solid var(--border);}
+.data-table td{padding:.85rem 1rem;font-size:.875rem;color:var(--text);border-bottom:1px solid var(--border);}
+.data-table tr:hover td{background:var(--bg2);}
+.data-table tr:last-child td{border-bottom:none;}
+.status-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .7rem;border-radius:99px;font-size:.75rem;font-weight:600;}
+.status-active{background:#dcfce7;color:#15803d;}
+.status-pending{background:#fef3c7;color:#92400e;}
+.status-rejected{background:#fee2e2;color:#b91c1c;}
+.status-interview{background:var(--blue-light);color:var(--blue);}
+[data-theme="dark"] .status-active{background:#14532d;color:#4ade80;}
+[data-theme="dark"] .status-pending{background:#451a03;color:#fcd34d;}
+[data-theme="dark"] .status-rejected{background:#450a0a;color:#f87171;}
+
+/* NOTIF PANEL */
+.notif-list{display:flex;flex-direction:column;gap:.5rem;}
+.notif-item{display:flex;align-items:flex-start;gap:.75rem;padding:.85rem;border-radius:var(--r-lg);background:var(--bg2);border:1px solid var(--border);cursor:pointer;transition:all .2s;}
+.notif-item:hover{border-color:var(--blue);}
+.notif-item.unread{border-left:3px solid var(--blue);}
+.notif-i{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.notif-text .title{font-size:.875rem;font-weight:500;}
+.notif-text .body{font-size:.8rem;color:var(--text2);margin-top:.2rem;}
+.notif-text .time{font-size:.73rem;color:var(--text3);margin-top:.3rem;}
+
+/* GAMIFICATION */
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;}
+.badge-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;text-align:center;transition:all .2s;}
+.badge-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.badge-icon{font-size:2.5rem;margin-bottom:.5rem;}
+.badge-name{font-size:.85rem;font-weight:700;margin-bottom:.25rem;}
+.badge-desc{font-size:.75rem;color:var(--text3);}
+.badge-card.earned{border-color:var(--amber);}
+.badge-card.locked{opacity:.5;}
+.leaderboard{margin-top:1.5rem;}
+.lb-item{display:flex;align-items:center;gap:1rem;padding:.85rem;border-radius:var(--r-lg);background:var(--bg2);margin-bottom:.5rem;}
+.lb-rank{width:28px;height:28px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0;}
+.lb-rank.gold{background:var(--amber);color:#fff;}
+.lb-rank.silver{background:#94a3b8;color:#fff;}
+.lb-rank.bronze{background:#b45309;color:#fff;}
+.lb-name{flex:1;font-size:.9rem;font-weight:500;}
+.lb-points{font-size:.85rem;font-weight:700;color:var(--blue);}
+.lb-bar{flex:1;height:6px;background:var(--bg3);border-radius:99px;overflow:hidden;}
+.lb-fill{height:100%;background:var(--blue);border-radius:99px;}
+
+/* ANALYTICS */
+.analytics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;margin-bottom:1.25rem;}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:2rem;}
+.page-header h1{font-size:1.75rem;margin-bottom:.4rem;}
+.page-header p{color:var(--text2);font-size:.9rem;}
+.page-header-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;}
+.search-bar{display:flex;align-items:center;gap:.5rem;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:.5rem 1rem;min-width:280px;}
+.search-bar i{color:var(--text3);}
+.search-bar input{border:none;background:transparent;color:var(--text);font-family:var(--font);font-size:.875rem;outline:none;width:100%;}
+.search-bar input::placeholder{color:var(--text3);}
+.filter-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.filter-chip{padding:.35rem .8rem;border-radius:99px;border:1.5px solid var(--border);background:var(--surface);font-size:.8rem;font-weight:500;cursor:pointer;transition:all .2s;color:var(--text2);}
+.filter-chip:hover,.filter-chip.active{border-color:var(--blue);background:var(--blue-light);color:var(--blue);}
+
+/* PROFILE PAGE */
+.profile-page-grid{display:grid;grid-template-columns:1fr 2fr;gap:1.5rem;}
+.profile-sidebar-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;}
+.profile-cover{height:80px;background:linear-gradient(135deg,var(--blue),var(--teal));}
+.profile-info-area{padding:0 1.5rem 1.5rem;text-align:center;position:relative;}
+.profile-avatar-wrap{margin-top:-36px;margin-bottom:.75rem;}
+.profile-avatar-wrap .av{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,var(--blue));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;font-weight:800;margin:0 auto;border:3px solid var(--surface);}
+.profile-page-name{font-size:1.2rem;font-weight:800;margin-bottom:.2rem;}
+.profile-page-role{font-size:.85rem;color:var(--text2);margin-bottom:.2rem;}
+.profile-page-school{font-size:.8rem;color:var(--text3);margin-bottom:1rem;}
+.skill-chips{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-bottom:1rem;}
+.skill-chip{padding:.25rem .65rem;border-radius:99px;font-size:.75rem;font-weight:600;background:var(--blue-light);color:var(--blue);}
+.info-row{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--text2);margin-bottom:.5rem;}
+.info-row i{color:var(--text3);width:16px;}
+.timeline{position:relative;padding-left:2rem;}
+.timeline::before{content:'';position:absolute;left:.5rem;top:.5rem;bottom:.5rem;width:2px;background:var(--border);}
+.timeline-item{position:relative;margin-bottom:1.5rem;}
+.timeline-dot{position:absolute;left:-1.625rem;top:.35rem;width:10px;height:10px;border-radius:50%;background:var(--blue);border:2px solid var(--surface);}
+.timeline-title{font-size:.9rem;font-weight:700;}
+.timeline-sub{font-size:.82rem;color:var(--text2);margin:.2rem 0;}
+.timeline-period{font-size:.78rem;color:var(--text3);}
+.timeline-desc{font-size:.82rem;color:var(--text2);margin-top:.4rem;line-height:1.6;}
+
+/* INDUSTRY DASHBOARD */
+.funnel{display:flex;flex-direction:column;gap:.75rem;}
+.funnel-item{display:flex;align-items:center;gap:1rem;}
+.funnel-label{width:120px;font-size:.82rem;color:var(--text2);flex-shrink:0;}
+.funnel-bar{flex:1;height:28px;border-radius:var(--r);background:var(--bg3);overflow:hidden;position:relative;}
+.funnel-fill{height:100%;border-radius:var(--r);display:flex;align-items:center;padding-left:.75rem;font-size:.78rem;font-weight:700;color:#fff;transition:width .8s ease;}
+.funnel-count{width:40px;font-size:.82rem;font-weight:700;text-align:right;}
+
+/* SETTINGS */
+.settings-grid{display:grid;grid-template-columns:200px 1fr;gap:2rem;}
+.settings-nav{display:flex;flex-direction:column;gap:.25rem;}
+.settings-nav-item{padding:.55rem .85rem;border-radius:var(--r);font-size:.875rem;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s;}
+.settings-nav-item:hover{background:var(--bg2);color:var(--text);}
+.settings-nav-item.active{background:var(--blue-light);color:var(--blue);}
+.settings-section{margin-bottom:2rem;}
+.settings-section h3{font-size:1rem;font-weight:700;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-info h4{font-size:.9rem;font-weight:500;margin-bottom:.2rem;}
+.toggle-info p{font-size:.8rem;color:var(--text2);}
+.toggle{width:44px;height:24px;background:var(--bg3);border-radius:99px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:var(--blue);}
+.toggle::after{content:'';width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.2);}
+.toggle.on::after{transform:translateX(20px);}
+
+/* MESSAGES */
+.msg-layout{display:grid;grid-template-columns:300px 1fr;height:calc(100vh - var(--navbar) - 4rem);background:var(--surface);border-radius:var(--r-xl);border:1px solid var(--border);overflow:hidden;}
+.msg-sidebar{border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.msg-sidebar-header{padding:1rem;border-bottom:1px solid var(--border);}
+.msg-sidebar-header h3{font-size:1rem;font-weight:700;margin-bottom:.75rem;}
+.conv-list{flex:1;overflow-y:auto;}
+.conv-item{display:flex;align-items:flex-start;gap:.75rem;padding:.85rem 1rem;cursor:pointer;border-bottom:1px solid var(--border);transition:background .2s;}
+.conv-item:hover{background:var(--bg2);}
+.conv-item.active{background:var(--blue-light);}
+.conv-ava{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0;}
+.conv-name{font-size:.875rem;font-weight:600;}
+.conv-preview{font-size:.8rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
+.conv-time{font-size:.73rem;color:var(--text3);flex-shrink:0;}
+.conv-unread{width:18px;height:18px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0;margin-top:.2rem;}
+.msg-main{display:flex;flex-direction:column;}
+.msg-main-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;}
+.msg-messages{flex:1;overflow-y:auto;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;}
+.msg-input-area{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.5rem;}
+.msg-input{flex:1;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:var(--r-lg);background:var(--bg2);color:var(--text);font-family:var(--font);font-size:.875rem;outline:none;}
+.msg-input:focus{border-color:var(--blue);}
+
+/* RESUME ANALYZER */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--r-xl);padding:3rem 2rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg2);}
+.upload-zone:hover{border-color:var(--blue);background:var(--blue-light);}
+.upload-icon{width:64px;height:64px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:var(--blue);}
+.score-ring{display:flex;justify-content:center;align-items:center;gap:3rem;flex-wrap:wrap;margin-bottom:2rem;}
+.score-circle{text-align:center;}
+.ring-wrap{width:100px;height:100px;border-radius:50%;background:conic-gradient(var(--blue) 0% 82%,var(--border) 82% 100%);display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto .5rem;}
+.ring-wrap.teal{background:conic-gradient(var(--teal) 0% 76%,var(--border) 76% 100%);}
+.ring-wrap.green{background:conic-gradient(var(--green) 0% 90%,var(--border) 90% 100%);}
+.ring-inner{width:76px;height:76px;background:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.ring-inner .score{font-family:var(--font-heading);font-size:1.4rem;font-weight:800;}
+.ring-inner .score-label{font-size:.65rem;color:var(--text3);}
+.ring-name{font-size:.85rem;font-weight:600;}
+
+/* EVENTS */
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem;}
+.event-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all .2s;cursor:pointer;}
+.event-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.event-banner{height:120px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.event-body{padding:1.25rem;}
+.event-type{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin-bottom:.4rem;}
+.event-title{font-size:1rem;font-weight:700;margin-bottom:.5rem;}
+.event-meta{display:flex;flex-direction:column;gap:.3rem;font-size:.82rem;color:var(--text2);}
+.event-meta span{display:flex;align-items:center;gap:.4rem;}
+.event-footer{padding:.85rem 1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.seats-left{font-size:.8rem;color:var(--text3);}
+
+/* ALUMNI */
+.alumni-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;}
+.alumni-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.5rem;transition:all .2s;}
+.alumni-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.alumni-top{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+.alumni-av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;color:#fff;flex-shrink:0;}
+.alumni-name{font-size:.95rem;font-weight:700;}
+.alumni-current{font-size:.82rem;color:var(--text2);}
+.alumni-college{font-size:.78rem;color:var(--text3);}
+.alumni-journey{font-size:.82rem;color:var(--text2);line-height:1.6;margin-bottom:1rem;}
+.alumni-btns{display:flex;gap:.5rem;}
+
+/* ADMIN PANEL */
+.admin-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+.admin-kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;position:relative;overflow:hidden;}
+.admin-kpi::after{content:'';position:absolute;top:0;left:0;width:4px;height:100%;}
+.admin-kpi.blue::after{background:var(--blue);}
+.admin-kpi.teal::after{background:var(--teal);}
+.admin-kpi.green::after{background:var(--green);}
+.admin-kpi.amber::after{background:var(--amber);}
+.admin-kpi .kpi-label{font-size:.78rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;}
+.admin-kpi .kpi-value{font-family:var(--font-heading);font-size:1.8rem;font-weight:800;}
+.admin-kpi .kpi-change{font-size:.78rem;margin-top:.25rem;color:var(--green);}
+.admin-kpi .kpi-icon{position:absolute;top:1rem;right:1rem;font-size:1.5rem;opacity:.15;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes countUp{from{opacity:0;}to{opacity:1;}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+.fade-up{animation:fadeUp .4s ease forwards;}
+.anim-1{animation-delay:.1s;opacity:0;}
+.anim-2{animation-delay:.2s;opacity:0;}
+.anim-3{animation-delay:.3s;opacity:0;}
+.anim-4{animation-delay:.4s;opacity:0;}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:4rem 2rem;}
+.empty-icon{font-size:3rem;margin-bottom:1rem;opacity:.3;}
+.empty-state h3{font-size:1.1rem;margin-bottom:.4rem;color:var(--text2);}
+.empty-state p{font-size:.875rem;color:var(--text3);}
+
+/* SKELETON */
+.skeleton{background:linear-gradient(90deg,var(--border) 25%,var(--bg3) 50%,var(--border) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--r);}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.sk-line{height:14px;margin-bottom:.5rem;}
+.sk-title{height:20px;width:60%;margin-bottom:.75rem;}
+.sk-card{height:180px;border-radius:var(--r-lg);}
+
+/* BREADCRUMB */
+.breadcrumb{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text3);margin-bottom:1.5rem;}
+.breadcrumb span{cursor:pointer;color:var(--text2);}
+.breadcrumb span:hover{color:var(--blue);}
+.breadcrumb .sep{color:var(--border2);}
+.breadcrumb .current{color:var(--text);}
+
+/* TOOLTIP */
+[title]{cursor:help;}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .dash-grid{grid-template-columns:repeat(2,1fr);}
+  .analytics-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .admin-kpi-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform .3s;}
+  .sidebar.open{transform:translateX(0);}
+  .main-content{margin-left:0;}
+  .navbar-nav{display:none;}
+  .dash-grid{grid-template-columns:1fr 1fr;}
+  .dash-row,.dash-row-3,.profile-page-grid,.settings-grid,.msg-layout,.analytics-grid{grid-template-columns:1fr;}
+  .hero-stats{gap:1.5rem;}
+  .footer-grid{grid-template-columns:1fr;}
+  .score-ring{gap:1.5rem;}
+}
+@media(max-width:480px){
+  .dash-grid{grid-template-columns:1fr;}
+  .role-select{grid-template-columns:1fr 1fr 1fr;}
+  .content-area{padding:1.25rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-brand" onclick="showPage('landing')">
+    <div class="navbar-logo">P</div>
+    Prashi<span>kshan</span>
+  </div>
+  <div class="navbar-nav" id="landingNav">
+    <span class="nav-link" onclick="scrollTo('#features')">Features</span>
+    <span class="nav-link" onclick="scrollTo('#testimonials')">Success Stories</span>
+    <span class="nav-link" onclick="scrollTo('#about')">About</span>
+    <span class="nav-link" onclick="showPage('landing')">Pricing</span>
+  </div>
+  <div class="navbar-right">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+      <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+    <div class="notif-btn" onclick="showPage('notifications')">
+      <i class="fas fa-bell"></i>
+      <div class="notif-dot"></div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="showPage('login')" id="loginBtn">Sign In</button>
+    <button class="btn btn-primary btn-sm" onclick="showPage('register')" id="regBtn">Get Started</button>
+    <div class="avatar" onclick="showPage('student-dashboard')" title="Go to Dashboard" id="userAvatar" style="display:none;">AS</div>
+  </div>
+</nav>
+
+<!-- ======================== LANDING PAGE ======================== -->
+<div id="page-landing" class="page active">
+  <div class="landing">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-badge"><i class="fas fa-bolt"></i> India's #1 Academia-Industry Platform</div>
+      <h1 class="fade-up">Bridging <span class="hl">Students</span>, Academia,<br>and <span class="hl2">Industry</span> for Skill-Driven Careers</h1>
+      <p class="fade-up anim-1">Connect with industries, mentors, internships, projects, and career opportunities from one unified platform designed for tomorrow's workforce.</p>
+      <div class="hero-btns fade-up anim-2">
+        <button class="btn btn-primary btn-lg" onclick="showPage('register')"><i class="fas fa-rocket"></i> Get Started Free</button>
+        <button class="btn btn-outline btn-lg" onclick="showPage('student-dashboard')"><i class="fas fa-play-circle"></i> View Demo</button>
+        <button class="btn btn-ghost btn-lg" onclick="showPage('internships')"><i class="fas fa-search"></i> Explore Opportunities</button>
+      </div>
+      <!-- Hero visual -->
+      <div style="max-width:900px;margin:0 auto 2rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-2xl);overflow:hidden;box-shadow:var(--shadow-xl);">
+        <div style="background:var(--navy);padding:.6rem 1rem;display:flex;align-items:center;gap:.4rem;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#ef4444;"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#f59e0b;"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#22c55e;"></span>
+          <span style="color:rgba(255,255,255,.4);font-size:.75rem;margin-left:1rem;">prashikshan.edu.in/dashboard</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;min-height:320px;">
+          <div style="background:var(--surface);border-right:1px solid var(--border);padding:1rem;">
+            <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:.5rem;">Dashboard</div>
+            <div style="display:flex;flex-direction:column;gap:.25rem;">
+              <div style="padding:.35rem .5rem;border-radius:6px;background:var(--blue-light);color:var(--blue);font-size:.75rem;font-weight:600;">🏠 Home</div>
+              <div style="padding:.35rem .5rem;font-size:.75rem;color:var(--text2);">💼 Internships</div>
+              <div style="padding:.35rem .5rem;font-size:.75rem;color:var(--text2);">🎯 Jobs</div>
+              <div style="padding:.35rem .5rem;font-size:.75rem;color:var(--text2);">🤖 AI Advisor</div>
+              <div style="padding:.35rem .5rem;font-size:.75rem;color:var(--text2);">👨‍🏫 Mentors</div>
+              <div style="padding:.35rem .5rem;font-size:.75rem;color:var(--text2);">📚 Courses</div>
+              <div style="padding:.35rem .5rem;font-size:.75rem;color:var(--text2);">🏆 Achievements</div>
+            </div>
+          </div>
+          <div style="padding:1.25rem;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1rem;">
+              <div style="background:var(--blue-light);border-radius:var(--r-lg);padding:.75rem;text-align:center;">
+                <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--blue);">12</div>
+                <div style="font-size:.7rem;color:var(--blue);opacity:.7;">Applications</div>
+              </div>
+              <div style="background:var(--teal-light);border-radius:var(--r-lg);padding:.75rem;text-align:center;">
+                <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--teal);">89%</div>
+                <div style="font-size:.7rem;color:var(--teal);opacity:.7;">Skill Score</div>
+              </div>
+              <div style="background:#dcfce7;border-radius:var(--r-lg);padding:.75rem;text-align:center;">
+                <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--green);">3</div>
+                <div style="font-size:.7rem;color:var(--green);opacity:.7;">Interviews</div>
+              </div>
+            </div>
+            <div style="background:var(--bg2);border-radius:var(--r-lg);padding:1rem;margin-bottom:.75rem;">
+              <div style="font-size:.75rem;font-weight:600;margin-bottom:.5rem;">Recommended Internships</div>
+              <div style="display:flex;flex-direction:column;gap:.4rem;">
+                <div style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;">
+                  <div style="width:24px;height:24px;border-radius:6px;background:#E8F4FD;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:800;color:#0078d4;">M</div>
+                  <span style="flex:1;color:var(--text);">SWE Intern · Microsoft</span>
+                  <span style="background:var(--blue-light);color:var(--blue);padding:.15rem .4rem;border-radius:4px;font-size:.65rem;">₹30k/mo</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;">
+                  <div style="width:24px;height:24px;border-radius:6px;background:#FEE2E2;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:800;color:#dc2626;">G</div>
+                  <span style="flex:1;color:var(--text);">ML Research Intern · Google</span>
+                  <span style="background:var(--teal-light);color:var(--teal);padding:.15rem .4rem;border-radius:4px;font-size:.65rem;">Remote</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;">
+                  <div style="width:24px;height:24px;border-radius:6px;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:800;color:#d97706;">A</div>
+                  <span style="flex:1;color:var(--text);">Data Analyst · Amazon</span>
+                  <span style="background:#dcfce7;color:#15803d;padding:.15rem .4rem;border-radius:4px;font-size:.65rem;">₹25k/mo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-stats" id="stats">
+        <div class="hero-stat"><div class="num" data-target="100000">0</div><div class="lbl">Students</div></div>
+        <div class="hero-stat"><div class="num" data-target="500">0</div><div class="lbl">Colleges</div></div>
+        <div class="hero-stat"><div class="num" data-target="1000">0</div><div class="lbl">Industry Partners</div></div>
+        <div class="hero-stat"><div class="num" data-target="50000">0</div><div class="lbl">Internships Posted</div></div>
+        <div class="hero-stat"><div class="num" data-target="25000">0</div><div class="lbl">Placements</div></div>
+      </div>
+    </section>
+
+    <!-- TRUSTED BY -->
+    <section class="trusted">
+      <div class="trusted-title">Trusted by India's Leading Institutions & Companies</div>
+      <div class="logo-strip">
+        <div class="logo-pill">IIT Bombay</div>
+        <div class="logo-pill">NIT Raipur</div>
+        <div class="logo-pill">BITS Pilani</div>
+        <div class="logo-pill">Infosys</div>
+        <div class="logo-pill">TCS</div>
+        <div class="logo-pill">Wipro</div>
+        <div class="logo-pill">Microsoft</div>
+        <div class="logo-pill">Google</div>
+        <div class="logo-pill">Zomato</div>
+        <div class="logo-pill">Razorpay</div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section" id="features" style="background:var(--bg);">
+      <div class="section-inner">
+        <div class="section-header">
+          <div class="section-tag">Platform Features</div>
+          <h2>Everything You Need to Launch Your Career</h2>
+          <p class="sub">A comprehensive ecosystem connecting students with industry opportunities, mentors, and resources.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card fade-up" onclick="showPage('internships')">
+            <div class="feature-icon fi-blue"><i class="fas fa-briefcase"></i></div>
+            <h3>Internship Portal</h3>
+            <p>Discover thousands of internships from top companies. Apply, track, and manage your internship journey seamlessly.</p>
+          </div>
+          <div class="feature-card fade-up anim-1" onclick="showPage('jobs')">
+            <div class="feature-icon fi-teal"><i class="fas fa-building"></i></div>
+            <h3>Placement Portal</h3>
+            <p>AI-powered job matching connects you with the right opportunities. LinkedIn-inspired interface for professional applications.</p>
+          </div>
+          <div class="feature-card fade-up anim-2" onclick="showPage('ai-advisor')">
+            <div class="feature-icon fi-amber"><i class="fas fa-robot"></i></div>
+            <h3>AI Career Advisor</h3>
+            <p>Personalized career guidance, skill gap analysis, and roadmaps powered by advanced AI technology.</p>
+          </div>
+          <div class="feature-card fade-up anim-3" onclick="showPage('mentorship')">
+            <div class="feature-icon fi-green"><i class="fas fa-chalkboard-teacher"></i></div>
+            <h3>Mentorship Hub</h3>
+            <p>Connect with industry experts and alumni mentors. Book sessions, get guidance, and accelerate your growth.</p>
+          </div>
+          <div class="feature-card fade-up" onclick="showPage('projects')">
+            <div class="feature-icon fi-red"><i class="fas fa-project-diagram"></i></div>
+            <h3>Industry Projects</h3>
+            <p>Work on real-world industry projects. Build your portfolio with experience that matters to recruiters.</p>
+          </div>
+          <div class="feature-card fade-up anim-1" onclick="showPage('assessments')">
+            <div class="feature-icon fi-blue"><i class="fas fa-chart-bar"></i></div>
+            <h3>Skill Assessments</h3>
+            <p>Validate your skills with industry-recognized assessments. Get certified and stand out from the crowd.</p>
+          </div>
+          <div class="feature-card fade-up anim-2" onclick="showPage('lms')">
+            <div class="feature-icon fi-teal"><i class="fas fa-graduation-cap"></i></div>
+            <h3>Learning Management</h3>
+            <p>Access curated courses, video lectures, assignments, and certification programs from expert instructors.</p>
+          </div>
+          <div class="feature-card fade-up anim-3" onclick="showPage('events')">
+            <div class="feature-icon fi-amber"><i class="fas fa-calendar-alt"></i></div>
+            <h3>Events & Hackathons</h3>
+            <p>Participate in webinars, workshops, hackathons, and placement drives. Network and showcase your talent.</p>
+          </div>
+          <div class="feature-card fade-up" onclick="showPage('alumni')">
+            <div class="feature-icon fi-green"><i class="fas fa-users"></i></div>
+            <h3>Alumni Network</h3>
+            <p>Connect with successful alumni across industries. Get referrals, advice, and career guidance from those who've been there.</p>
+          </div>
+          <div class="feature-card fade-up anim-1" onclick="showPage('analytics')">
+            <div class="feature-icon fi-red"><i class="fas fa-chart-line"></i></div>
+            <h3>Analytics Dashboard</h3>
+            <p>Track your progress, skill development, and career trajectory with powerful visual analytics and insights.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section" id="testimonials" style="background:var(--surface);">
+      <div class="section-inner">
+        <div class="section-header">
+          <div class="section-tag blue">Success Stories</div>
+          <h2>Students Who Found Their Dream Career</h2>
+          <p class="sub">Over 25,000 students have landed their dream placements through Prashikshan.</p>
+        </div>
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="quote">"Prashikshan completely transformed my career journey. The AI advisor identified my skill gaps and the mentorship hub connected me with an amazing Google engineer who helped me crack FAANG interviews."</p>
+            <div class="author">
+              <div class="ava" style="background:linear-gradient(135deg,#7c3aed,#2563eb);">AP</div>
+              <div><div class="name">Arjun Patel</div><div class="role">SDE-2 at Google · IIT Bombay 2024</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="quote">"The industry projects section gave me real experience working with a fintech startup. My portfolio was miles ahead of other candidates. Secured a ₹24 LPA offer at Razorpay straight out of college!"</p>
+            <div class="author">
+              <div class="ava" style="background:linear-gradient(135deg,#059669,#14b8a6);">PS</div>
+              <div><div class="name">Priya Sharma</div><div class="role">Product Manager at Razorpay · NIT Trichy 2023</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="quote">"As a placement officer, Prashikshan has been a game-changer. Our placement rate jumped from 68% to 94% in just one year. The analytics help us identify students who need additional support early."</p>
+            <div class="author">
+              <div class="ava" style="background:linear-gradient(135deg,#d97706,#f59e0b);">RK</div>
+              <div><div class="name">Dr. Rajesh Kumar</div><div class="role">Placement Director · BITS Pilani</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <h2>Ready to Build Your Future?</h2>
+      <p>Join 100,000+ students, 500+ colleges, and 1,000+ companies on India's most powerful career platform.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-white btn-lg" onclick="showPage('register')"><i class="fas fa-user-plus"></i> Create Free Account</button>
+        <button class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,.4);" onclick="showPage('industry-dashboard')"><i class="fas fa-building"></i> Partner with Us</button>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div>
+            <div class="footer-brand">Prashi<span>kshan</span></div>
+            <p class="footer-desc">India's most comprehensive Academia-Industry Interface Platform. Connecting students, educators, and industry for skill-driven careers.</p>
+            <div class="social-links" style="margin-top:1.25rem;">
+              <div class="social-link"><i class="fab fa-linkedin-in"></i></div>
+              <div class="social-link"><i class="fab fa-twitter"></i></div>
+              <div class="social-link"><i class="fab fa-instagram"></i></div>
+              <div class="social-link"><i class="fab fa-youtube"></i></div>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Platform</h4>
+            <a onclick="showPage('internships')">Internships</a>
+            <a onclick="showPage('jobs')">Jobs</a>
+            <a onclick="showPage('mentorship')">Mentorship</a>
+            <a onclick="showPage('lms')">Courses</a>
+            <a onclick="showPage('events')">Events</a>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <a>About Us</a>
+            <a>Careers</a>
+            <a>Blog</a>
+            <a>Press Kit</a>
+            <a>Contact</a>
+          </div>
+          <div class="footer-col">
+            <h4>Legal</h4>
+            <a>Privacy Policy</a>
+            <a>Terms of Service</a>
+            <a>Cookie Policy</a>
+            <a>GDPR</a>
+            <a>Security</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2025 Prashikshan Technologies Pvt. Ltd. All rights reserved.</span>
+          <span>Made with ❤️ in India</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- ======================== LOGIN ======================== -->
+<div id="page-login" class="page">
+  <div class="auth-page">
+    <div class="auth-card fade-up">
+      <h2>Welcome Back</h2>
+      <p class="sub">Sign in to your Prashikshan account</p>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" class="form-input" placeholder="student@university.ac.in"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" class="form-input" placeholder="••••••••"/>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:1.25rem;">
+        <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;">
+          <input type="checkbox" style="accent-color:var(--blue);"/> Remember me
+        </label>
+        <a onclick="showPage('forgot-password')" style="color:var(--blue);cursor:pointer;">Forgot password?</a>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="loginAction()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+      <div class="divider">or continue with</div>
+      <div class="social-auth">
+        <button class="social-auth-btn" onclick="loginAction()"><i class="fab fa-google" style="color:#ea4335;"></i> Google</button>
+        <button class="social-auth-btn" onclick="loginAction()"><i class="fab fa-microsoft" style="color:#0078d4;"></i> Microsoft</button>
+      </div>
+      <p class="auth-link">Don't have an account? <a onclick="showPage('register')">Create one</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== REGISTER ======================== -->
+<div id="page-register" class="page">
+  <div class="auth-page">
+    <div class="auth-card fade-up">
+      <h2>Join Prashikshan</h2>
+      <p class="sub">Start your career journey today</p>
+      <div class="form-group">
+        <label class="form-label">I am a...</label>
+        <div class="role-select">
+          <div class="role-btn selected" onclick="selectRole(this)">🎓 Student</div>
+          <div class="role-btn" onclick="selectRole(this)">👨‍🏫 Faculty</div>
+          <div class="role-btn" onclick="selectRole(this)">🏢 Industry</div>
+          <div class="role-btn" onclick="selectRole(this)">🧑‍💼 Mentor</div>
+          <div class="role-btn" onclick="selectRole(this)">📋 TPO</div>
+          <div class="role-btn" onclick="selectRole(this)">🔧 Admin</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-input" placeholder="Aryan"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-input" placeholder="Singh"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" class="form-input" placeholder="aryan@nit.ac.in"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Create Password</label>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" class="form-input" placeholder="Min. 8 characters"/>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="loginAction()"><i class="fas fa-user-plus"></i> Create Account</button>
+      <div class="divider">or sign up with</div>
+      <div class="social-auth">
+        <button class="social-auth-btn" onclick="loginAction()"><i class="fab fa-google" style="color:#ea4335;"></i> Google</button>
+        <button class="social-auth-btn" onclick="loginAction()"><i class="fab fa-microsoft" style="color:#0078d4;"></i> Microsoft</button>
+      </div>
+      <p class="auth-link">Already have an account? <a onclick="showPage('login')">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== FORGOT PASSWORD ======================== -->
+<div id="page-forgot-password" class="page">
+  <div class="auth-page">
+    <div class="auth-card fade-up">
+      <div style="width:56px;height:56px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;font-size:1.5rem;color:var(--blue);">🔐</div>
+      <h2>Reset Password</h2>
+      <p class="sub">Enter your email to receive an OTP</p>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" class="form-input" placeholder="your@email.com"/>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="showPage('login')"><i class="fas fa-paper-plane"></i> Send OTP</button>
+      <p class="auth-link"><a onclick="showPage('login')"><i class="fas fa-arrow-left"></i> Back to Sign In</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== STUDENT DASHBOARD ======================== -->
+<div id="page-student-dashboard" class="page">
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Main</div>
+        <div class="sidebar-item active" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div>
+        <div class="sidebar-item" onclick="showPage('profile')"><i class="fas fa-user"></i> My Profile</div>
+        <div class="sidebar-item"><i class="fas fa-file-alt"></i> Resume</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Opportunities</div>
+        <div class="sidebar-item" onclick="showPage('internships')"><i class="fas fa-briefcase"></i> Internships <span class="sidebar-badge">12</span></div>
+        <div class="sidebar-item" onclick="showPage('jobs')"><i class="fas fa-building"></i> Jobs</div>
+        <div class="sidebar-item" onclick="showPage('projects')"><i class="fas fa-code-branch"></i> Projects</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">AI Tools</div>
+        <div class="sidebar-item" onclick="showPage('ai-advisor')"><i class="fas fa-robot"></i> AI Career Advisor</div>
+        <div class="sidebar-item" onclick="showPage('resume-analyzer')"><i class="fas fa-search"></i> Resume Analyzer</div>
+        <div class="sidebar-item" onclick="showPage('interview-coach')"><i class="fas fa-microphone"></i> Interview Coach</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Learning</div>
+        <div class="sidebar-item" onclick="showPage('mentorship')"><i class="fas fa-chalkboard-teacher"></i> Mentors</div>
+        <div class="sidebar-item" onclick="showPage('assessments')"><i class="fas fa-chart-bar"></i> Assessments</div>
+        <div class="sidebar-item" onclick="showPage('lms')"><i class="fas fa-graduation-cap"></i> Courses</div>
+        <div class="sidebar-item" onclick="showPage('events')"><i class="fas fa-calendar-alt"></i> Events <span class="sidebar-badge green">3</span></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Community</div>
+        <div class="sidebar-item" onclick="showPage('alumni')"><i class="fas fa-users"></i> Alumni</div>
+        <div class="sidebar-item" onclick="showPage('gamification')"><i class="fas fa-trophy"></i> Achievements</div>
+        <div class="sidebar-item" onclick="showPage('messages')"><i class="fas fa-comments"></i> Messages <span class="sidebar-badge">5</span></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Other</div>
+        <div class="sidebar-item" onclick="showPage('analytics')"><i class="fas fa-chart-line"></i> Analytics</div>
+        <div class="sidebar-item" onclick="showPage('notifications')"><i class="fas fa-bell"></i> Notifications</div>
+        <div class="sidebar-item" onclick="showPage('settings')"><i class="fas fa-cog"></i> Settings</div>
+      </div>
+    </aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="breadcrumb"><span onclick="showPage('landing')">Home</span><span class="sep">›</span><span class="current">Dashboard</span></div>
+        <div class="page-header">
+          <h1>Good morning, Aryan! 👋</h1>
+          <p>Here's what's happening with your career journey today.</p>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="dash-grid">
+          <div class="stat-card fade-up">
+            <div class="stat-icon fi-blue"><i class="fas fa-paper-plane"></i></div>
+            <div><div class="num">12</div><div class="label">Applications</div><div class="change up">↑ 4 this week</div></div>
+          </div>
+          <div class="stat-card fade-up anim-1">
+            <div class="stat-icon fi-teal"><i class="fas fa-star"></i></div>
+            <div><div class="num">89%</div><div class="label">Skill Score</div><div class="change up">↑ 5% growth</div></div>
+          </div>
+          <div class="stat-card fade-up anim-2">
+            <div class="stat-icon fi-green"><i class="fas fa-calendar-check"></i></div>
+            <div><div class="num">3</div><div class="label">Interviews</div><div class="change up">2 this week</div></div>
+          </div>
+          <div class="stat-card fade-up anim-3">
+            <div class="stat-icon fi-amber"><i class="fas fa-certificate"></i></div>
+            <div><div class="num">7</div><div class="label">Certificates</div><div class="change up">+1 new</div></div>
+          </div>
+        </div>
+
+        <!-- CHARTS ROW -->
+        <div class="dash-row">
+          <div class="card">
+            <div class="card-header">
+              <h3>Application Activity</h3>
+              <span class="card-action">Last 6 months</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="appChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Profile Completion</h3>
+              <span class="card-action" onclick="showPage('profile')">Edit →</span>
+            </div>
+            <div class="card-body">
+              <div class="profile-completion">
+                <div class="profile-circle"><span>72%</span></div>
+                <div class="profile-info">
+                  <h4>Strong Profile</h4>
+                  <p>Add 2 more skills to reach Expert level</p>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header"><span>Work Experience</span><span style="color:var(--green)">100%</span></div>
+                <div class="progress-bar"><div class="progress-fill pf-green" style="width:100%"></div></div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header"><span>Skills Added</span><span style="color:var(--blue)">80%</span></div>
+                <div class="progress-bar"><div class="progress-fill pf-blue" style="width:80%"></div></div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header"><span>Education</span><span style="color:var(--teal)">100%</span></div>
+                <div class="progress-bar"><div class="progress-fill pf-teal" style="width:100%"></div></div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header"><span>Projects</span><span style="color:var(--amber)">60%</span></div>
+                <div class="progress-bar"><div class="progress-fill pf-amber" style="width:60%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVITY + SKILL -->
+        <div class="dash-row">
+          <div class="card">
+            <div class="card-header"><h3>Recent Activity</h3><span class="card-action">View All</span></div>
+            <div class="card-body">
+              <div class="activity-item">
+                <div class="act-icon fi-blue"><i class="fas fa-paper-plane"></i></div>
+                <div class="act-text"><div class="title">Applied to <strong>SWE Intern at Microsoft</strong></div><div class="time">2 hours ago</div></div>
+                <span class="status-badge status-active">Applied</span>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon fi-teal"><i class="fas fa-certificate"></i></div>
+                <div class="act-text"><div class="title">Completed <strong>Python for Data Science</strong></div><div class="time">Yesterday</div></div>
+                <span class="status-badge status-interview">Certified</span>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon fi-green"><i class="fas fa-handshake"></i></div>
+                <div class="act-text"><div class="title">Mentorship session with <strong>Priya Nair, Google</strong></div><div class="time">2 days ago</div></div>
+                <span class="status-badge status-active">Completed</span>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon fi-amber"><i class="fas fa-star"></i></div>
+                <div class="act-text"><div class="title">Skill Assessment: <strong>DSA Advanced</strong> — 94%</div><div class="time">3 days ago</div></div>
+                <span class="status-badge status-active">Passed</span>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon fi-red"><i class="fas fa-times-circle"></i></div>
+                <div class="act-text"><div class="title">Application to <strong>Data Analyst at Flipkart</strong></div><div class="time">5 days ago</div></div>
+                <span class="status-badge status-rejected">Not Selected</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Skill Distribution</h3></div>
+            <div class="card-body">
+              <div class="chart-container-sm">
+                <canvas id="skillChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECOMMENDED INTERNSHIPS -->
+        <div class="card" style="margin-bottom:1.25rem;">
+          <div class="card-header"><h3>Recommended Internships</h3><span class="card-action" onclick="showPage('internships')">View All →</span></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;">
+              <div class="opp-card" style="padding:1rem;" onclick="showPage('internships')">
+                <div class="opp-card-top">
+                  <div class="company-logo" style="background:#E8F4FD;color:#0078d4;">M</div>
+                  <div><div class="opp-title">Software Engineering Intern</div><div class="opp-company">Microsoft · Hyderabad</div></div>
+                </div>
+                <div class="opp-tags"><span class="tag tag-blue">React</span><span class="tag tag-teal">Node.js</span><span class="tag tag-green">₹30,000/mo</span></div>
+              </div>
+              <div class="opp-card" style="padding:1rem;" onclick="showPage('internships')">
+                <div class="opp-card-top">
+                  <div class="company-logo" style="background:#FEE2E2;color:#dc2626;">G</div>
+                  <div><div class="opp-title">ML Research Intern</div><div class="opp-company">Google · Remote</div></div>
+                </div>
+                <div class="opp-tags"><span class="tag tag-blue">Python</span><span class="tag tag-teal">TensorFlow</span><span class="tag tag-amber">6 months</span></div>
+              </div>
+              <div class="opp-card" style="padding:1rem;" onclick="showPage('internships')">
+                <div class="opp-card-top">
+                  <div class="company-logo" style="background:#FEF3C7;color:#d97706;">R</div>
+                  <div><div class="opp-title">Backend Engineer Intern</div><div class="opp-company">Razorpay · Bangalore</div></div>
+                </div>
+                <div class="opp-tags"><span class="tag tag-blue">Go</span><span class="tag tag-teal">PostgreSQL</span><span class="tag tag-green">₹40,000/mo</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPCOMING EVENTS + QUICK ACTIONS -->
+        <div class="dash-row">
+          <div class="card">
+            <div class="card-header"><h3>Upcoming Events</h3><span class="card-action" onclick="showPage('events')">View All →</span></div>
+            <div class="card-body">
+              <div class="activity-item">
+                <div class="act-icon" style="background:#fef3c7;color:#d97706;"><i class="fas fa-trophy"></i></div>
+                <div class="act-text"><div class="title">Smart India Hackathon 2025</div><div class="time">Dec 10-12 · Online + Offline</div></div>
+                <button class="btn btn-primary btn-sm">Register</button>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon fi-blue"><i class="fas fa-video"></i></div>
+                <div class="act-text"><div class="title">Webinar: Cracking FAANG in 2025</div><div class="time">Dec 8 · 6:00 PM IST</div></div>
+                <button class="btn btn-outline btn-sm">Attend</button>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon fi-green"><i class="fas fa-building"></i></div>
+                <div class="act-text"><div class="title">TCS Campus Drive – NIT Raipur</div><div class="time">Dec 15 · On Campus</div></div>
+                <button class="btn btn-teal btn-sm">Register</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Quick Actions</h3></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:.6rem;">
+                <button class="btn btn-primary" style="justify-content:flex-start;width:100%;" onclick="showPage('ai-advisor')"><i class="fas fa-robot"></i> Ask AI Career Advisor</button>
+                <button class="btn btn-outline" style="justify-content:flex-start;width:100%;" onclick="showPage('resume-analyzer')"><i class="fas fa-search"></i> Analyze My Resume</button>
+                <button class="btn btn-outline" style="justify-content:flex-start;width:100%;" onclick="showPage('assessments')"><i class="fas fa-chart-bar"></i> Take Skill Assessment</button>
+                <button class="btn btn-outline" style="justify-content:flex-start;width:100%;" onclick="showPage('mentorship')"><i class="fas fa-chalkboard-teacher"></i> Book Mentor Session</button>
+                <button class="btn btn-outline" style="justify-content:flex-start;width:100%;" onclick="showPage('interview-coach')"><i class="fas fa-microphone"></i> Start Mock Interview</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== PROFILE PAGE ======================== -->
+<div id="page-profile" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-user"></i> Profile</div><div class="sidebar-item" onclick="showPage('internships')"><i class="fas fa-briefcase"></i> Internships</div><div class="sidebar-item" onclick="showPage('jobs')"><i class="fas fa-building"></i> Jobs</div><div class="sidebar-item" onclick="showPage('settings')"><i class="fas fa-cog"></i> Settings</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="breadcrumb"><span onclick="showPage('student-dashboard')">Dashboard</span><span class="sep">›</span><span class="current">Profile</span></div>
+        <div class="page-header-row">
+          <div><h1 style="font-size:1.75rem;">My Profile</h1><p style="color:var(--text2);">Manage your professional information and portfolio</p></div>
+          <button class="btn btn-primary"><i class="fas fa-edit"></i> Edit Profile</button>
+        </div>
+        <div class="profile-page-grid">
+          <div>
+            <div class="profile-sidebar-card">
+              <div class="profile-cover"></div>
+              <div class="profile-info-area">
+                <div class="profile-avatar-wrap"><div class="av">AS</div></div>
+                <div class="profile-page-name">Aryan Singh</div>
+                <div class="profile-page-role">B.Tech CSE · 3rd Year</div>
+                <div class="profile-page-school"><i class="fas fa-university" style="margin-right:.3rem;"></i>NIT Raipur, Chhattisgarh</div>
+                <div class="skill-chips">
+                  <span class="skill-chip">React</span><span class="skill-chip">Python</span><span class="skill-chip">Node.js</span>
+                  <span class="skill-chip">ML/AI</span><span class="skill-chip">SQL</span><span class="skill-chip">AWS</span>
+                </div>
+                <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;margin-bottom:.5rem;"><i class="fas fa-download"></i> Download Resume</button>
+                <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center;"><i class="fas fa-share-alt"></i> Share Profile</button>
+                <div style="margin-top:1.25rem;text-align:left;">
+                  <div class="info-row"><i class="fas fa-envelope"></i> aryan.singh@nitraipur.ac.in</div>
+                  <div class="info-row"><i class="fas fa-phone"></i> +91 9876543210</div>
+                  <div class="info-row"><i class="fas fa-map-marker-alt"></i> Raipur, Chhattisgarh</div>
+                  <div class="info-row"><i class="fab fa-linkedin"></i> linkedin.com/in/aryansingh</div>
+                  <div class="info-row"><i class="fab fa-github"></i> github.com/aryansingh</div>
+                  <div class="info-row"><i class="fas fa-globe"></i> aryansingh.dev</div>
+                </div>
+                <div style="margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1rem;">
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;text-align:center;">
+                    <div><div style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--blue);">12</div><div style="font-size:.7rem;color:var(--text3);">Applications</div></div>
+                    <div><div style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--teal);">7</div><div style="font-size:.7rem;color:var(--text3);">Certificates</div></div>
+                    <div><div style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--green);">3</div><div style="font-size:.7rem;color:var(--text3);">Projects</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:1.25rem;">
+              <div class="card-header"><h3><i class="fas fa-graduation-cap" style="color:var(--blue);margin-right:.5rem;"></i>Education</h3><button class="btn btn-ghost btn-sm"><i class="fas fa-plus"></i></button></div>
+              <div class="card-body">
+                <div class="timeline">
+                  <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-title">B.Tech – Computer Science & Engineering</div><div class="timeline-sub">National Institute of Technology, Raipur</div><div class="timeline-period">2022 – 2026 · CGPA: 8.7/10</div></div>
+                  <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-title">Class XII – CBSE</div><div class="timeline-sub">DAV Public School, Raipur</div><div class="timeline-period">2020 – 2022 · 94.6%</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:1.25rem;">
+              <div class="card-header"><h3><i class="fas fa-briefcase" style="color:var(--teal);margin-right:.5rem;"></i>Experience</h3><button class="btn btn-ghost btn-sm"><i class="fas fa-plus"></i></button></div>
+              <div class="card-body">
+                <div class="timeline">
+                  <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-title">Software Development Intern</div><div class="timeline-sub">Infosys BPM · Bangalore</div><div class="timeline-period">May 2024 – Aug 2024 · 4 months</div><div class="timeline-desc">Built microservices using Spring Boot and deployed on AWS. Reduced API latency by 40% through query optimization.</div></div>
+                  <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-title">Open Source Contributor</div><div class="timeline-sub">Apache Foundation</div><div class="timeline-period">Jan 2024 – Present</div><div class="timeline-desc">Contributing to Apache Kafka client libraries. Merged 8 PRs impacting 15,000+ daily users.</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:1.25rem;">
+              <div class="card-header"><h3><i class="fas fa-code" style="color:var(--green);margin-right:.5rem;"></i>Projects</h3><button class="btn btn-ghost btn-sm"><i class="fas fa-plus"></i></button></div>
+              <div class="card-body">
+                <div class="timeline">
+                  <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-title">AI-Powered Resume Screener</div><div class="timeline-sub">Python · FastAPI · React · OpenAI GPT-4</div><div class="timeline-desc">Built an automated resume screening system achieving 92% accuracy on JD-resume matching.</div></div>
+                  <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-title">Real-time Chat Application</div><div class="timeline-sub">Node.js · Socket.io · MongoDB · Redis</div><div class="timeline-desc">Scalable chat app with 10,000+ concurrent users support. Features E2E encryption and message persistence.</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3><i class="fas fa-certificate" style="color:var(--amber);margin-right:.5rem;"></i>Certifications</h3></div>
+              <div class="card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+                  <div style="padding:.75rem;background:var(--bg2);border-radius:var(--r);border:1px solid var(--border);">
+                    <div style="font-size:.85rem;font-weight:600;">AWS Solutions Architect</div>
+                    <div style="font-size:.75rem;color:var(--text3);margin-top:.2rem;">Amazon Web Services · Oct 2024</div>
+                    <span class="status-badge status-active" style="margin-top:.5rem;">Verified</span>
+                  </div>
+                  <div style="padding:.75rem;background:var(--bg2);border-radius:var(--r);border:1px solid var(--border);">
+                    <div style="font-size:.85rem;font-weight:600;">TensorFlow Developer</div>
+                    <div style="font-size:.75rem;color:var(--text3);margin-top:.2rem;">Google · Sep 2024</div>
+                    <span class="status-badge status-active" style="margin-top:.5rem;">Verified</span>
+                  </div>
+                  <div style="padding:.75rem;background:var(--bg2);border-radius:var(--r);border:1px solid var(--border);">
+                    <div style="font-size:.85rem;font-weight:600;">Meta React Developer</div>
+                    <div style="font-size:.75rem;color:var(--text3);margin-top:.2rem;">Meta · Aug 2024</div>
+                    <span class="status-badge status-active" style="margin-top:.5rem;">Verified</span>
+                  </div>
+                  <div style="padding:.75rem;background:var(--bg2);border-radius:var(--r);border:1px solid var(--border);">
+                    <div style="font-size:.85rem;font-weight:600;">GCP Associate Engineer</div>
+                    <div style="font-size:.75rem;color:var(--text3);margin-top:.2rem;">Google Cloud · Jul 2024</div>
+                    <span class="status-badge status-active" style="margin-top:.5rem;">Verified</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== INTERNSHIPS ======================== -->
+<div id="page-internships" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-briefcase"></i> Internships</div><div class="sidebar-item" onclick="showPage('jobs')"><i class="fas fa-building"></i> Jobs</div><div class="sidebar-item" onclick="showPage('projects')"><i class="fas fa-code-branch"></i> Projects</div><div class="sidebar-item" onclick="showPage('ai-advisor')"><i class="fas fa-robot"></i> AI Advisor</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="breadcrumb"><span onclick="showPage('student-dashboard')">Dashboard</span><span class="sep">›</span><span class="current">Internships</span></div>
+        <div class="page-header-row">
+          <div><h1 style="font-size:1.75rem;">Internship Portal</h1><p style="color:var(--text2);">12,450 active internships · 842 new this week</p></div>
+          <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Search company, role, skill..."/></div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-chip active">All</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Remote</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Hybrid</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">On-site</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">₹20k+</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">₹30k+</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">3 months</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">6 months</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Tech</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Finance</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Marketing</span>
+        </div>
+        <div class="opp-grid">
+          <div class="opp-card">
+            <div class="opp-card-top">
+              <div class="company-logo" style="background:#E8F4FD;color:#0078d4;">M</div>
+              <div><div class="opp-title">Software Engineering Intern</div><div class="opp-company">Microsoft India · Hyderabad</div></div>
+            </div>
+            <div class="opp-tags"><span class="tag tag-blue">React</span><span class="tag tag-blue">Node.js</span><span class="tag tag-teal">TypeScript</span></div>
+            <div class="opp-meta"><span><i class="fas fa-map-marker-alt"></i> Hyderabad</span><span><i class="fas fa-clock"></i> 3 months</span><span><i class="fas fa-rupee-sign"></i> 30,000/mo</span></div>
+            <div class="opp-footer"><span class="tag tag-green">✓ AI Match 96%</span><button class="btn btn-primary btn-sm">Apply Now</button></div>
+          </div>
+          <div class="opp-card">
+            <div class="opp-card-top">
+              <div class="company-logo" style="background:#FEE2E2;color:#dc2626;">G</div>
+              <div><div class="opp-title">ML Research Intern</div><div class="opp-company">Google · Remote</div></div>
+            </div>
+            <div class="opp-tags"><span class="tag tag-blue">Python</span><span class="tag tag-teal">TensorFlow</span><span class="tag tag-amber">Research</span></div>
+            <div class="opp-meta"><span><i class="fas fa-home"></i> Remote</span><span><i class="fas fa-clock"></i> 6 months</span><span><i class="fas fa-rupee-sign"></i> 50,000/mo</span></div>
+            <div class="opp-footer"><span class="tag tag-green">✓ AI Match 91%</span><button class="btn btn-primary btn-sm">Apply Now</button></div>
+          </div>
+          <div class="opp-card">
+            <div class="opp-card-top">
+              <div class="company-logo" style="background:#FEF3C7;color:#d97706;">R</div>
+              <div><div class="opp-title">Backend Engineer Intern</div><div class="opp-company">Razorpay · Bangalore</div></div>
+            </div>
+            <div class="opp-tags"><span class="tag tag-blue">Go</span><span class="tag tag-teal">PostgreSQL</span><span class="tag tag-blue">Redis</span></div>
+            <div class="opp-meta"><span><i class="fas fa-map-marker-alt"></i> Bangalore</span><span><i class="fas fa-clock"></i> 4 months</span><span><i class="fas fa-rupee-sign"></i> 40,000/mo</span></div>
+            <div class="opp-footer"><span class="tag tag-green">✓ AI Match 88%</span><button class="btn btn-primary btn-sm">Apply Now</button></div>
+          </div>
+          <div class="opp-card">
+            <div class="opp-card-top">
+              <div class="company-logo" style="background:#dcfce7;color:#15803d;">Z</div>
+              <div><div class="opp-title">Data Science Intern</div><div class="opp-company">Zepto · Mumbai</div></div>
+            </div>
+            <div class="opp-tags"><span class="tag tag-blue">Python</span><span class="tag tag-teal">SQL</span><span class="tag tag-amber">Tableau</span></div>
+            <div class="opp-meta"><span><i class="fas fa-map-marker-alt"></i> Mumbai</span><span><i class="fas fa-clock"></i> 3 months</span><span><i class="fas fa-rupee-sign"></i> 25,000/mo</span></div>
+            <div class="opp-footer"><span class="tag tag-teal">Hybrid</span><button class="btn btn-primary btn-sm">Apply Now</button></div>
+          </div>
+          <div class="opp-card">
+            <div class="opp-card-top">
+              <div class="company-logo" style="background:#e0e7ff;color:#4338ca;">I</div>
+              <div><div class="opp-title">UI/UX Design Intern</div><div class="opp-company">CRED · Bangalore</div></div>
+            </div>
+            <div class="opp-tags"><span class="tag tag-blue">Figma</span><span class="tag tag-teal">Prototyping</span><span class="tag tag-amber">Design Systems</span></div>
+            <div class="opp-meta"><span><i class="fas fa-map-marker-alt"></i> Bangalore</span><span><i class="fas fa-clock"></i> 6 months</span><span><i class="fas fa-rupee-sign"></i> 35,000/mo</span></div>
+            <div class="opp-footer"><span class="tag tag-teal">Hybrid</span><button class="btn btn-primary btn-sm">Apply Now</button></div>
+          </div>
+          <div class="opp-card">
+            <div class="opp-card-top">
+              <div class="company-logo" style="background:#fee2e2;color:#be185d;">P</div>
+              <div><div class="opp-title">Product Management Intern</div><div class="opp-company">Meesho · Bangalore</div></div>
+            </div>
+            <div class="opp-tags"><span class="tag tag-blue">Analytics</span><span class="tag tag-teal">Strategy</span><span class="tag tag-amber">Product</span></div>
+            <div class="opp-meta"><span><i class="fas fa-map-marker-alt"></i> Bangalore</span><span><i class="fas fa-clock"></i> 2 months</span><span><i class="fas fa-rupee-sign"></i> 20,000/mo</span></div>
+            <div class="opp-footer"><span class="tag tag-green">New</span><button class="btn btn-primary btn-sm">Apply Now</button></div>
+          </div>
+        </div>
+        <!-- APPLICATION TRACKER -->
+        <div class="card" style="margin-top:2rem;">
+          <div class="card-header"><h3>My Applications</h3></div>
+          <div class="card-body" style="padding:0;">
+            <table class="data-table">
+              <thead><tr><th>Company</th><th>Role</th><th>Applied On</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Microsoft</strong></td><td>SWE Intern</td><td>Dec 1, 2024</td><td><span class="status-badge status-interview">Interview Scheduled</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+                <tr><td><strong>Google</strong></td><td>ML Research Intern</td><td>Nov 28, 2024</td><td><span class="status-badge status-active">Shortlisted</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+                <tr><td><strong>Infosys</strong></td><td>Web Dev Intern</td><td>Nov 20, 2024</td><td><span class="status-badge status-active">Selected ✓</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+                <tr><td><strong>Swiggy</strong></td><td>Backend Intern</td><td>Nov 15, 2024</td><td><span class="status-badge status-rejected">Not Selected</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== JOBS ======================== -->
+<div id="page-jobs" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item" onclick="showPage('internships')"><i class="fas fa-briefcase"></i> Internships</div><div class="sidebar-item active"><i class="fas fa-building"></i> Jobs</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header-row">
+          <div><h1 style="font-size:1.75rem;">Job Portal</h1><p style="color:var(--text2);">8,200 active jobs · AI-matched for you</p></div>
+          <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Job title, company, skills..."/></div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-chip active">All Jobs</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Full-time</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Remote</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">₹5L–10L</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">₹10L–20L</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">₹20L+</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Freshers</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">0-1 years</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Product</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Engineering</span>
+        </div>
+        <div class="opp-grid">
+          <div class="opp-card">
+            <div class="opp-card-top"><div class="company-logo" style="background:#E8F4FD;color:#0078d4;">M</div><div><div class="opp-title">Software Engineer II</div><div class="opp-company">Microsoft · Hyderabad</div></div></div>
+            <div class="opp-tags"><span class="tag tag-blue">C#</span><span class="tag tag-teal">.NET</span><span class="tag tag-blue">Azure</span></div>
+            <div class="opp-meta"><span><i class="fas fa-money-bill"></i> ₹18–28 LPA</span><span><i class="fas fa-users"></i> 2–4 years</span></div>
+            <div class="opp-footer"><span class="tag tag-green">AI Match 93%</span><button class="btn btn-primary btn-sm">Apply</button></div>
+          </div>
+          <div class="opp-card">
+            <div class="opp-card-top"><div class="company-logo" style="background:#dbeafe;color:#1d4ed8;">F</div><div><div class="opp-title">Frontend Engineer</div><div class="opp-company">Flipkart · Bangalore</div></div></div>
+            <div class="opp-tags"><span class="tag tag-blue">React</span><span class="tag tag-teal">TypeScript</span><span class="tag tag-amber">Performance</span></div>
+            <div class="opp-meta"><span><i class="fas fa-money-bill"></i> ₹15–25 LPA</span><span><i class="fas fa-users"></i> 1–3 years</span></div>
+            <div class="opp-footer"><span class="tag tag-green">AI Match 89%</span><button class="btn btn-primary btn-sm">Apply</button></div>
+          </div>
+          <div class="opp-card">
+            <div class="opp-card-top"><div class="company-logo" style="background:#FEF3C7;color:#d97706;">Z</div><div><div class="opp-title">Data Scientist</div><div class="opp-company">Zomato · Gurgaon</div></div></div>
+            <div class="opp-tags"><span class="tag tag-blue">Python</span><span class="tag tag-teal">ML</span><span class="tag tag-blue">Spark</span></div>
+            <div class="opp-meta"><span><i class="fas fa-money-bill"></i> ₹20–35 LPA</span><span><i class="fas fa-users"></i> 2–5 years</span></div>
+            <div class="opp-footer"><span class="tag tag-amber">Hot 🔥</span><button class="btn btn-primary btn-sm">Apply</button></div>
+          </div>
+          <div class="opp-card">
+            <div class="opp-card-top"><div class="company-logo" style="background:#dcfce7;color:#15803d;">S</div><div><div class="opp-title">SDE – I (Fresher)</div><div class="opp-company">Swiggy · Bangalore</div></div></div>
+            <div class="opp-tags"><span class="tag tag-blue">Java</span><span class="tag tag-teal">Spring Boot</span><span class="tag tag-blue">Kafka</span></div>
+            <div class="opp-meta"><span><i class="fas fa-money-bill"></i> ₹12–18 LPA</span><span><i class="fas fa-graduation-cap"></i> Freshers OK</span></div>
+            <div class="opp-footer"><span class="tag tag-green">New Grad</span><button class="btn btn-primary btn-sm">Apply</button></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== AI ADVISOR ======================== -->
+<div id="page-ai-advisor" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-robot"></i> AI Career Advisor</div><div class="sidebar-item" onclick="showPage('resume-analyzer')"><i class="fas fa-search"></i> Resume Analyzer</div><div class="sidebar-item" onclick="showPage('interview-coach')"><i class="fas fa-microphone"></i> Interview Coach</div></div></aside>
+    <main class="main-content">
+      <div class="content-area" style="height:calc(100vh - var(--navbar));overflow:hidden;display:flex;flex-direction:column;">
+        <div class="breadcrumb"><span onclick="showPage('student-dashboard')">Dashboard</span><span class="sep">›</span><span class="current">AI Career Advisor</span></div>
+        <div class="ai-chat" style="flex:1;">
+          <div class="chat-header">
+            <div class="ai-icon"><i class="fas fa-robot"></i></div>
+            <div><div style="font-weight:700;font-size:.95rem;">Prashikshan AI</div><div style="font-size:.78rem;color:var(--green);"><i class="fas fa-circle" style="font-size:.5rem;"></i> Online · Career & Placement Expert</div></div>
+            <button class="btn btn-ghost btn-sm" style="margin-left:auto;" onclick="clearChat()"><i class="fas fa-redo"></i> New Chat</button>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="msg ai">
+              <div class="msg-avatar" style="background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;"><i class="fas fa-robot"></i></div>
+              <div class="msg-bubble">👋 Hi Aryan! I'm your AI Career Advisor. I can help you with career guidance, skill gap analysis, resume tips, and interview prep. <br><br>What would you like to explore today?</div>
+            </div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-left:48px;">
+              <button class="btn btn-outline btn-sm" onclick="sendQuick('What skills should I learn for SDE roles in 2025?')">Skills for SDE 2025</button>
+              <button class="btn btn-outline btn-sm" onclick="sendQuick('Analyze my skill gaps for Google SWE role')">Skill Gap Analysis</button>
+              <button class="btn btn-outline btn-sm" onclick="sendQuick('Create a 3-month career roadmap for me')">Career Roadmap</button>
+              <button class="btn btn-outline btn-sm" onclick="sendQuick('Tips for cracking FAANG interviews')">FAANG Tips</button>
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <div class="chat-input-wrap">
+              <textarea class="chat-input" id="chatInput" rows="1" placeholder="Ask me about careers, skills, internships, or interview prep..." onkeydown="handleChatKey(event)"></textarea>
+              <button class="chat-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== RESUME ANALYZER ======================== -->
+<div id="page-resume-analyzer" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item" onclick="showPage('ai-advisor')"><i class="fas fa-robot"></i> AI Advisor</div><div class="sidebar-item active"><i class="fas fa-search"></i> Resume Analyzer</div><div class="sidebar-item" onclick="showPage('interview-coach')"><i class="fas fa-microphone"></i> Interview Coach</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header"><h1>AI Resume Analyzer</h1><p>Get instant ATS score, skill gap analysis, and improvement suggestions</p></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+          <div>
+            <div class="card" style="margin-bottom:1.25rem;">
+              <div class="card-header"><h3>Upload Resume</h3></div>
+              <div class="card-body">
+                <div class="upload-zone" onclick="analyzeResume()">
+                  <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                  <h3 style="margin-bottom:.4rem;">Drop your resume here</h3>
+                  <p style="color:var(--text2);font-size:.875rem;">Supports PDF, DOCX · Max 5MB</p>
+                  <button class="btn btn-primary" style="margin-top:1rem;" onclick="analyzeResume()"><i class="fas fa-upload"></i> Browse Files</button>
+                </div>
+                <div style="margin-top:1.25rem;">
+                  <label class="form-label">Target Job Description (optional)</label>
+                  <textarea class="form-input" rows="4" placeholder="Paste the JD you want to match against for a precise skill gap analysis..." style="resize:vertical;"></textarea>
+                  <button class="btn btn-primary btn-sm" style="margin-top:.75rem;width:100%;justify-content:center;" onclick="analyzeResume()"><i class="fas fa-chart-bar"></i> Analyze Resume</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="resumeResults" style="display:none;">
+            <div class="card" style="margin-bottom:1.25rem;">
+              <div class="card-header"><h3>Analysis Results</h3></div>
+              <div class="card-body">
+                <div class="score-ring">
+                  <div class="score-circle"><div class="ring-wrap"><div class="ring-inner"><span class="score" style="color:var(--blue);">82</span><span class="score-label">ATS</span></div></div><div class="ring-name">ATS Score</div></div>
+                  <div class="score-circle"><div class="ring-wrap teal"><div class="ring-inner"><span class="score" style="color:var(--teal);">76</span><span class="score-label">Match</span></div></div><div class="ring-name">JD Match</div></div>
+                  <div class="score-circle"><div class="ring-wrap green"><div class="ring-inner"><span class="score" style="color:var(--green);">90</span><span class="score-label">Format</span></div></div><div class="ring-name">Format Score</div></div>
+                </div>
+                <div style="margin-top:1.25rem;">
+                  <div style="font-size:.85rem;font-weight:700;margin-bottom:.75rem;color:var(--text);">Matched Skills</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.25rem;">
+                    <span class="tag tag-green">React</span><span class="tag tag-green">Python</span><span class="tag tag-green">Node.js</span><span class="tag tag-green">SQL</span><span class="tag tag-green">Git</span><span class="tag tag-green">AWS</span>
+                  </div>
+                  <div style="font-size:.85rem;font-weight:700;margin-bottom:.75rem;color:var(--red);">Missing Skills (for target JD)</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.25rem;">
+                    <span class="tag" style="background:#fee2e2;color:#b91c1c;">Kubernetes</span><span class="tag" style="background:#fee2e2;color:#b91c1c;">Terraform</span><span class="tag" style="background:#fee2e2;color:#b91c1c;">Go</span>
+                  </div>
+                  <div style="font-size:.85rem;font-weight:700;margin-bottom:.75rem;color:var(--amber);">Improvement Suggestions</div>
+                  <div style="display:flex;flex-direction:column;gap:.6rem;">
+                    <div style="display:flex;gap:.5rem;font-size:.85rem;padding:.65rem;background:var(--bg2);border-radius:var(--r);border-left:3px solid var(--amber);">💡 Add quantifiable achievements (e.g., "Reduced load time by 40%")</div>
+                    <div style="display:flex;gap:.5rem;font-size:.85rem;padding:.65rem;background:var(--bg2);border-radius:var(--r);border-left:3px solid var(--blue);">📝 Include a stronger professional summary section</div>
+                    <div style="display:flex;gap:.5rem;font-size:.85rem;padding:.65rem;background:var(--bg2);border-radius:var(--r);border-left:3px solid var(--teal);">🎯 Add Kubernetes certification to strengthen DevOps profile</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="resumePlaceholder">
+            <div class="card">
+              <div class="card-header"><h3>What We Analyze</h3></div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:1rem;">
+                  <div style="display:flex;gap:.75rem;align-items:flex-start;"><div class="fi-blue" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-robot"></i></div><div><div style="font-size:.9rem;font-weight:600;">ATS Compatibility</div><div style="font-size:.82rem;color:var(--text2);">Check if your resume passes Applicant Tracking Systems used by top companies</div></div></div>
+                  <div style="display:flex;gap:.75rem;align-items:flex-start;"><div class="fi-teal" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-bullseye"></i></div><div><div style="font-size:.9rem;font-weight:600;">Skill Gap Analysis</div><div style="font-size:.82rem;color:var(--text2);">Identify missing skills based on your target JD or industry standards</div></div></div>
+                  <div style="display:flex;gap:.75rem;align-items:flex-start;"><div class="fi-amber" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-magic"></i></div><div><div style="font-size:.9rem;font-weight:600;">Smart Suggestions</div><div style="font-size:.82rem;color:var(--text2);">Get AI-powered recommendations to make your resume stand out from 1000s of applications</div></div></div>
+                  <div style="display:flex;gap:.75rem;align-items:flex-start;"><div class="fi-green" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-chart-bar"></i></div><div><div style="font-size:.9rem;font-weight:600;">Benchmark Score</div><div style="font-size:.82rem;color:var(--text2);">See how you compare against top candidates applying for similar roles</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== INTERVIEW COACH ======================== -->
+<div id="page-interview-coach" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item" onclick="showPage('ai-advisor')"><i class="fas fa-robot"></i> AI Advisor</div><div class="sidebar-item" onclick="showPage('resume-analyzer')"><i class="fas fa-search"></i> Resume Analyzer</div><div class="sidebar-item active"><i class="fas fa-microphone"></i> Interview Coach</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header"><h1>AI Interview Coach</h1><p>Practice, improve, and ace your next interview</p></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+          <div class="card">
+            <div class="card-header"><h3>Mock Interview</h3></div>
+            <div class="card-body">
+              <div style="text-align:center;padding:2rem 1rem;">
+                <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:2rem;color:#fff;"><i class="fas fa-microphone"></i></div>
+                <h3 style="margin-bottom:.5rem;">AI Mock Interviewer</h3>
+                <p style="color:var(--text2);font-size:.875rem;margin-bottom:1.5rem;">Simulate real interview experiences with our AI. Practice DSA, System Design, HR & Behavioral questions.</p>
+                <div class="form-group" style="text-align:left;">
+                  <label class="form-label">Interview Type</label>
+                  <select class="form-input">
+                    <option>Technical (DSA + System Design)</option>
+                    <option>HR & Behavioral</option>
+                    <option>Full Stack Technical</option>
+                    <option>Product Management</option>
+                    <option>Data Science</option>
+                  </select>
+                </div>
+                <div class="form-group" style="text-align:left;">
+                  <label class="form-label">Difficulty Level</label>
+                  <select class="form-input">
+                    <option>Intermediate (3–5 years exp)</option>
+                    <option>Beginner (Fresher)</option>
+                    <option>Advanced (5+ years exp)</option>
+                    <option>FAANG Level</option>
+                  </select>
+                </div>
+                <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:.5rem;"><i class="fas fa-play"></i> Start Mock Interview</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:1.25rem;">
+              <div class="card-header"><h3>Performance History</h3></div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:.75rem;">
+                  <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem;background:var(--bg2);border-radius:var(--r);">
+                    <div style="width:44px;height:44px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:.85rem;font-weight:800;">85</div>
+                    <div style="flex:1;"><div style="font-size:.875rem;font-weight:600;">Technical Round · Microsoft</div><div style="font-size:.78rem;color:var(--text3);">Nov 28 · 45 minutes</div></div>
+                    <span class="status-badge status-active">Good</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem;background:var(--bg2);border-radius:var(--r);">
+                    <div style="width:44px;height:44px;border-radius:50%;background:var(--teal-light);display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:.85rem;font-weight:800;">72</div>
+                    <div style="flex:1;"><div style="font-size:.875rem;font-weight:600;">HR Round · Amazon</div><div style="font-size:.78rem;color:var(--text3);">Nov 20 · 30 minutes</div></div>
+                    <span class="status-badge status-pending">Average</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem;background:var(--bg2);border-radius:var(--r);">
+                    <div style="width:44px;height:44px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;color:var(--green);font-size:.85rem;font-weight:800;">92</div>
+                    <div style="flex:1;"><div style="font-size:.875rem;font-weight:600;">DSA Round · Flipkart</div><div style="font-size:.78rem;color:var(--text3);">Nov 15 · 60 minutes</div></div>
+                    <span class="status-badge status-active">Excellent</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Practice Questions</h3></div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:.6rem;">
+                  <div style="padding:.65rem .85rem;border:1px solid var(--border);border-radius:var(--r);font-size:.875rem;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <span class="diff-med assess-diff">Medium</span><span style="margin-left:.5rem;">LRU Cache Implementation</span>
+                  </div>
+                  <div style="padding:.65rem .85rem;border:1px solid var(--border);border-radius:var(--r);font-size:.875rem;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <span class="diff-hard assess-diff">Hard</span><span style="margin-left:.5rem;">Design a URL Shortener</span>
+                  </div>
+                  <div style="padding:.65rem .85rem;border:1px solid var(--border);border-radius:var(--r);font-size:.875rem;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <span class="diff-easy assess-diff">Easy</span><span style="margin-left:.5rem;">Tell me about yourself (HR)</span>
+                  </div>
+                  <div style="padding:.65rem .85rem;border:1px solid var(--border);border-radius:var(--r);font-size:.875rem;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <span class="diff-hard assess-diff">Hard</span><span style="margin-left:.5rem;">Design Twitter's Feed Algorithm</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== MENTORSHIP ======================== -->
+<div id="page-mentorship" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-chalkboard-teacher"></i> Mentors</div><div class="sidebar-item" onclick="showPage('messages')"><i class="fas fa-comments"></i> Messages</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header-row">
+          <div><h1 style="font-size:1.75rem;">Mentorship Hub</h1><p style="color:var(--text2);">Connect with 500+ industry experts and alumni mentors</p></div>
+          <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Search mentors by skill, company..."/></div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-chip active">All Mentors</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Tech</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Product</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Finance</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Design</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">FAANG</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Free Slots</span>
+        </div>
+        <div class="mentor-grid">
+          <div class="mentor-card">
+            <div class="mentor-avatar" style="background:linear-gradient(135deg,#7c3aed,#2563eb);">PN</div>
+            <div class="mentor-name">Priya Nair</div>
+            <div class="mentor-role">Senior Software Engineer</div>
+            <div class="mentor-company"><i class="fab fa-google" style="color:#ea4335;"></i> Google · 7 years exp</div>
+            <div class="mentor-skills"><span class="tag tag-blue">Python</span><span class="tag tag-teal">ML</span><span class="tag tag-blue">System Design</span></div>
+            <div class="mentor-rating">★★★★★ <span>4.9</span> · 145 sessions</div>
+            <div class="mentor-btns"><button class="btn btn-primary btn-sm">Book Session</button><button class="btn btn-outline btn-sm" onclick="showPage('messages')">Message</button></div>
+          </div>
+          <div class="mentor-card">
+            <div class="mentor-avatar" style="background:linear-gradient(135deg,#059669,#14b8a6);">RV</div>
+            <div class="mentor-name">Rahul Verma</div>
+            <div class="mentor-role">Staff Engineer</div>
+            <div class="mentor-company"><i class="fab fa-microsoft" style="color:#0078d4;"></i> Microsoft · 10 years exp</div>
+            <div class="mentor-skills"><span class="tag tag-blue">C++</span><span class="tag tag-teal">Azure</span><span class="tag tag-blue">DSA</span></div>
+            <div class="mentor-rating">★★★★★ <span>4.8</span> · 210 sessions</div>
+            <div class="mentor-btns"><button class="btn btn-primary btn-sm">Book Session</button><button class="btn btn-outline btn-sm">Message</button></div>
+          </div>
+          <div class="mentor-card">
+            <div class="mentor-avatar" style="background:linear-gradient(135deg,#d97706,#f59e0b);">SK</div>
+            <div class="mentor-name">Sneha Kapoor</div>
+            <div class="mentor-role">Product Manager</div>
+            <div class="mentor-company">🚀 Razorpay · 5 years exp</div>
+            <div class="mentor-skills"><span class="tag tag-amber">Product</span><span class="tag tag-teal">Strategy</span><span class="tag tag-amber">Analytics</span></div>
+            <div class="mentor-rating">★★★★☆ <span>4.7</span> · 89 sessions</div>
+            <div class="mentor-btns"><button class="btn btn-primary btn-sm">Book Session</button><button class="btn btn-outline btn-sm">Message</button></div>
+          </div>
+          <div class="mentor-card">
+            <div class="mentor-avatar" style="background:linear-gradient(135deg,#be185d,#ec4899);">AM</div>
+            <div class="mentor-name">Aditya Mehta</div>
+            <div class="mentor-role">Engineering Manager</div>
+            <div class="mentor-company">📦 Amazon · 12 years exp</div>
+            <div class="mentor-skills"><span class="tag tag-blue">Leadership</span><span class="tag tag-teal">AWS</span><span class="tag tag-blue">Distributed Systems</span></div>
+            <div class="mentor-rating">★★★★★ <span>5.0</span> · 67 sessions</div>
+            <div class="mentor-btns"><button class="btn btn-primary btn-sm">Book Session</button><button class="btn btn-outline btn-sm">Message</button></div>
+          </div>
+          <div class="mentor-card">
+            <div class="mentor-avatar" style="background:linear-gradient(135deg,#0369a1,#0ea5e9);">DG</div>
+            <div class="mentor-name">Divya Gupta</div>
+            <div class="mentor-role">Data Science Lead</div>
+            <div class="mentor-company">🦄 Meesho · 6 years exp</div>
+            <div class="mentor-skills"><span class="tag tag-blue">ML</span><span class="tag tag-teal">NLP</span><span class="tag tag-blue">Python</span></div>
+            <div class="mentor-rating">★★★★★ <span>4.9</span> · 120 sessions</div>
+            <div class="mentor-btns"><button class="btn btn-primary btn-sm">Book Session</button><button class="btn btn-outline btn-sm">Message</button></div>
+          </div>
+          <div class="mentor-card">
+            <div class="mentor-avatar" style="background:linear-gradient(135deg,#15803d,#22c55e);">VK</div>
+            <div class="mentor-name">Vikram Kumar</div>
+            <div class="mentor-role">CISO – Cybersecurity</div>
+            <div class="mentor-company">🔒 Zomato · 9 years exp</div>
+            <div class="mentor-skills"><span class="tag tag-blue">Security</span><span class="tag tag-teal">Pentest</span><span class="tag tag-amber">VAPT</span></div>
+            <div class="mentor-rating">★★★★☆ <span>4.6</span> · 55 sessions</div>
+            <div class="mentor-btns"><button class="btn btn-primary btn-sm">Book Session</button><button class="btn btn-outline btn-sm">Message</button></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== PROJECTS ======================== -->
+<div id="page-projects" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-code-branch"></i> Projects</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header"><h1>Industry Project Marketplace</h1><p>Work on real-world projects with industry mentors. Build your portfolio.</p></div>
+        <div class="opp-grid">
+          <div class="opp-card">
+            <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;">
+              <span class="tag tag-blue">AI/ML</span><span class="diff-med assess-diff">Intermediate</span>
+            </div>
+            <div class="opp-title">AI-Powered Supply Chain Optimizer</div>
+            <div class="opp-company" style="margin:.3rem 0 .75rem;">Hindustan Unilever · Prof. Ramesh Iyer, IIT Bombay</div>
+            <div class="opp-tags"><span class="tag tag-teal">Python</span><span class="tag tag-blue">TensorFlow</span><span class="tag tag-amber">OR Tools</span></div>
+            <div class="opp-meta"><span><i class="fas fa-users"></i> Team of 4</span><span><i class="fas fa-clock"></i> 3 months</span></div>
+            <div class="opp-footer"><button class="btn btn-primary btn-sm">Apply to Project</button><button class="btn btn-ghost btn-sm">View Details</button></div>
+          </div>
+          <div class="opp-card">
+            <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;">
+              <span class="tag tag-teal">Fintech</span><span class="diff-hard assess-diff">Advanced</span>
+            </div>
+            <div class="opp-title">Fraud Detection System – Real-time ML</div>
+            <div class="opp-company" style="margin:.3rem 0 .75rem;">HDFC Bank · Prof. Anita Shah, IIM Ahmedabad</div>
+            <div class="opp-tags"><span class="tag tag-blue">Spark</span><span class="tag tag-teal">Kafka</span><span class="tag tag-blue">XGBoost</span></div>
+            <div class="opp-meta"><span><i class="fas fa-users"></i> Team of 3</span><span><i class="fas fa-clock"></i> 4 months</span></div>
+            <div class="opp-footer"><button class="btn btn-primary btn-sm">Apply to Project</button><button class="btn btn-ghost btn-sm">View Details</button></div>
+          </div>
+          <div class="opp-card">
+            <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;">
+              <span class="tag tag-green">Healthcare</span><span class="diff-med assess-diff">Intermediate</span>
+            </div>
+            <div class="opp-title">Medical Image Diagnosis using Deep Learning</div>
+            <div class="opp-company" style="margin:.3rem 0 .75rem;">Apollo Hospitals · AIIMS Delhi Research Cell</div>
+            <div class="opp-tags"><span class="tag tag-blue">PyTorch</span><span class="tag tag-teal">OpenCV</span><span class="tag tag-amber">DICOM</span></div>
+            <div class="opp-meta"><span><i class="fas fa-users"></i> Team of 5</span><span><i class="fas fa-clock"></i> 6 months</span></div>
+            <div class="opp-footer"><button class="btn btn-primary btn-sm">Apply to Project</button><button class="btn btn-ghost btn-sm">View Details</button></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== ASSESSMENTS ======================== -->
+<div id="page-assessments" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-chart-bar"></i> Assessments</div><div class="sidebar-item" onclick="showPage('lms')"><i class="fas fa-graduation-cap"></i> Courses</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header"><h1>Skill Assessment Platform</h1><p>Validate your skills. Get certified. Stand out from 100,000+ students.</p></div>
+        <div class="assess-grid">
+          <div class="assess-card">
+            <div class="assess-icon fi-blue"><i class="fas fa-code"></i></div>
+            <h3>Data Structures & Algorithms</h3>
+            <p>Arrays, Trees, Graphs, DP, Sorting & Searching</p>
+            <div class="assess-meta">40 Questions · 90 min · <span class="diff-hard assess-diff">Hard</span></div>
+            <div style="margin-top:.75rem;"><button class="btn btn-primary btn-sm">Start Test</button></div>
+          </div>
+          <div class="assess-card">
+            <div class="assess-icon fi-teal"><i class="fas fa-brain"></i></div>
+            <h3>Machine Learning Fundamentals</h3>
+            <p>Regression, Classification, Clustering, Neural Nets</p>
+            <div class="assess-meta">35 Questions · 60 min · <span class="diff-med assess-diff">Medium</span></div>
+            <div style="margin-top:.75rem;"><button class="btn btn-primary btn-sm">Start Test</button></div>
+          </div>
+          <div class="assess-card">
+            <div class="assess-icon fi-amber"><i class="fas fa-network-wired"></i></div>
+            <h3>System Design</h3>
+            <p>Scalability, Load Balancing, Caching, Databases</p>
+            <div class="assess-meta">25 Questions · 75 min · <span class="diff-hard assess-diff">Hard</span></div>
+            <div style="margin-top:.75rem;"><button class="btn btn-primary btn-sm">Start Test</button></div>
+          </div>
+          <div class="assess-card">
+            <div class="assess-icon fi-green"><i class="fas fa-calculator"></i></div>
+            <h3>Quantitative Aptitude</h3>
+            <p>Numbers, Probability, Time & Work, Geometry</p>
+            <div class="assess-meta">50 Questions · 45 min · <span class="diff-easy assess-diff">Easy</span></div>
+            <div style="margin-top:.75rem;"><button class="btn btn-primary btn-sm">Start Test</button></div>
+          </div>
+          <div class="assess-card">
+            <div class="assess-icon fi-red"><i class="fas fa-comments"></i></div>
+            <h3>Communication & Soft Skills</h3>
+            <p>Verbal, Written, Teamwork & Leadership</p>
+            <div class="assess-meta">30 Questions · 40 min · <span class="diff-easy assess-diff">Easy</span></div>
+            <div style="margin-top:.75rem;"><button class="btn btn-primary btn-sm">Start Test</button></div>
+          </div>
+          <div class="assess-card">
+            <div class="assess-icon fi-blue"><i class="fab fa-react"></i></div>
+            <h3>Full Stack Web Development</h3>
+            <p>HTML/CSS, JS, React, Node.js, REST APIs</p>
+            <div class="assess-meta">45 Questions · 80 min · <span class="diff-med assess-diff">Medium</span></div>
+            <div style="margin-top:.75rem;"><button class="btn btn-primary btn-sm">Start Test</button></div>
+          </div>
+        </div>
+        <!-- Leaderboard -->
+        <div class="card" style="margin-top:2rem;">
+          <div class="card-header"><h3><i class="fas fa-trophy" style="color:var(--amber);margin-right:.5rem;"></i>Assessment Leaderboard</h3></div>
+          <div class="card-body">
+            <div class="leaderboard">
+              <div class="lb-item"><div class="lb-rank gold">1</div><div class="avatar" style="width:32px;height:32px;font-size:.7rem;">SK</div><div class="lb-name">Sanya Khanna · NIT Raipur</div><div class="lb-bar"><div class="lb-fill" style="width:98%;background:var(--amber);"></div></div><div class="lb-points">9,847 pts</div></div>
+              <div class="lb-item"><div class="lb-rank silver">2</div><div class="avatar" style="width:32px;height:32px;font-size:.7rem;background:linear-gradient(135deg,#0369a1,#0ea5e9);">MJ</div><div class="lb-name">Mohit Jain · IIT Delhi</div><div class="lb-bar"><div class="lb-fill" style="width:93%;background:#94a3b8;"></div></div><div class="lb-points">9,420 pts</div></div>
+              <div class="lb-item"><div class="lb-rank bronze">3</div><div class="avatar" style="width:32px;height:32px;font-size:.7rem;background:linear-gradient(135deg,#b45309,#d97706);">RP</div><div class="lb-name">Rohan Patil · VIT Pune</div><div class="lb-bar"><div class="lb-fill" style="width:87%;background:#b45309;"></div></div><div class="lb-points">8,910 pts</div></div>
+              <div class="lb-item" style="background:var(--blue-light);border:1px solid var(--blue);"><div class="lb-rank" style="background:var(--blue);color:#fff;">4</div><div class="avatar" style="width:32px;height:32px;font-size:.7rem;">AS</div><div class="lb-name" style="font-weight:700;">You · Aryan Singh</div><div class="lb-bar"><div class="lb-fill" style="width:82%;"></div></div><div class="lb-points">8,420 pts</div></div>
+              <div class="lb-item"><div class="lb-rank">5</div><div class="avatar" style="width:32px;height:32px;font-size:.7rem;background:linear-gradient(135deg,#059669,#22c55e);">NS</div><div class="lb-name">Neha Sinha · BITS Pilani</div><div class="lb-bar"><div class="lb-fill" style="width:78%;"></div></div><div class="lb-points">7,980 pts</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== LMS ======================== -->
+<div id="page-lms" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-graduation-cap"></i> Courses</div><div class="sidebar-item" onclick="showPage('assessments')"><i class="fas fa-chart-bar"></i> Assessments</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header-row">
+          <div><h1 style="font-size:1.75rem;">Learning Center</h1><p style="color:var(--text2);">250+ expert-led courses across 15 technology domains</p></div>
+          <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Search courses..."/></div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-chip active">All</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">AI/ML</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Cloud</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Full Stack</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Data Science</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Cybersecurity</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">DevOps</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Free</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;">
+          <div class="feature-card" style="padding:0;overflow:hidden;">
+            <div style="height:140px;background:linear-gradient(135deg,#7c3aed,#2563eb);display:flex;align-items:center;justify-content:center;font-size:3rem;">🤖</div>
+            <div style="padding:1.25rem;">
+              <div style="display:flex;gap:.4rem;margin-bottom:.5rem;"><span class="tag tag-blue">AI/ML</span><span class="diff-med assess-diff">Intermediate</span></div>
+              <h3 style="font-size:.95rem;margin-bottom:.3rem;">Machine Learning with Python</h3>
+              <p style="font-size:.82rem;color:var(--text2);">Dr. Andrew Singh · IIT Bombay</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.75rem;">
+                <div style="font-size:.8rem;color:var(--text3);"><i class="fas fa-clock"></i> 48 hours · ★★★★★ 4.9</div>
+                <button class="btn btn-primary btn-sm">Enroll</button>
+              </div>
+              <div class="progress-bar" style="margin-top:.75rem;"><div class="progress-fill pf-blue" style="width:35%;"></div></div>
+              <div style="font-size:.73rem;color:var(--text3);margin-top:.25rem;">35% completed</div>
+            </div>
+          </div>
+          <div class="feature-card" style="padding:0;overflow:hidden;">
+            <div style="height:140px;background:linear-gradient(135deg,#0369a1,#0ea5e9);display:flex;align-items:center;justify-content:center;font-size:3rem;">☁️</div>
+            <div style="padding:1.25rem;">
+              <div style="display:flex;gap:.4rem;margin-bottom:.5rem;"><span class="tag tag-teal">Cloud</span><span class="diff-med assess-diff">Intermediate</span></div>
+              <h3 style="font-size:.95rem;margin-bottom:.3rem;">AWS Solutions Architect</h3>
+              <p style="font-size:.82rem;color:var(--text2);">Sanjay Mehta · AWS Certified Trainer</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.75rem;">
+                <div style="font-size:.8rem;color:var(--text3);"><i class="fas fa-clock"></i> 36 hours · ★★★★★ 4.8</div>
+                <button class="btn btn-primary btn-sm">Enroll</button>
+              </div>
+              <div class="progress-bar" style="margin-top:.75rem;"><div class="progress-fill pf-teal" style="width:60%;"></div></div>
+              <div style="font-size:.73rem;color:var(--text3);margin-top:.25rem;">60% completed</div>
+            </div>
+          </div>
+          <div class="feature-card" style="padding:0;overflow:hidden;">
+            <div style="height:140px;background:linear-gradient(135deg,#059669,#22c55e);display:flex;align-items:center;justify-content:center;font-size:3rem;">🛡️</div>
+            <div style="padding:1.25rem;">
+              <div style="display:flex;gap:.4rem;margin-bottom:.5rem;"><span class="tag" style="background:#dcfce7;color:#15803d;">Security</span><span class="diff-hard assess-diff">Advanced</span></div>
+              <h3 style="font-size:.95rem;margin-bottom:.3rem;">Ethical Hacking & Cybersecurity</h3>
+              <p style="font-size:.82rem;color:var(--text2);">Kamal Verma · ISRO Cybersecurity</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.75rem;">
+                <div style="font-size:.8rem;color:var(--text3);"><i class="fas fa-clock"></i> 52 hours · ★★★★★ 4.7</div>
+                <button class="btn btn-primary btn-sm">Enroll</button>
+              </div>
+              <div class="progress-bar" style="margin-top:.75rem;"><div class="progress-fill pf-green" style="width:0%;"></div></div>
+              <div style="font-size:.73rem;color:var(--text3);margin-top:.25rem;">Not started</div>
+            </div>
+          </div>
+          <div class="feature-card" style="padding:0;overflow:hidden;">
+            <div style="height:140px;background:linear-gradient(135deg,#d97706,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:3rem;">⚛️</div>
+            <div style="padding:1.25rem;">
+              <div style="display:flex;gap:.4rem;margin-bottom:.5rem;"><span class="tag tag-amber">Frontend</span><span class="diff-med assess-diff">Intermediate</span></div>
+              <h3 style="font-size:.95rem;margin-bottom:.3rem;">React + Next.js Masterclass</h3>
+              <p style="font-size:.82rem;color:var(--text2);">Rohan Das · Ex-Flipkart Engineer</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.75rem;">
+                <div style="font-size:.8rem;color:var(--text3);"><i class="fas fa-clock"></i> 40 hours · ★★★★★ 4.9</div>
+                <button class="btn btn-primary btn-sm">Enroll</button>
+              </div>
+              <div class="progress-bar" style="margin-top:.75rem;"><div class="progress-fill pf-amber" style="width:80%;"></div></div>
+              <div style="font-size:.73rem;color:var(--text3);margin-top:.25rem;">80% completed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== EVENTS ======================== -->
+<div id="page-events" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-calendar-alt"></i> Events</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header"><h1>Events & Opportunities</h1><p>Upcoming hackathons, webinars, workshops, and placement drives</p></div>
+        <div class="filter-row">
+          <span class="filter-chip active">All Events</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Hackathons</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Webinars</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Workshops</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Placement Drives</span>
+          <span class="filter-chip" onclick="toggleFilter(this)">Industrial Visits</span>
+        </div>
+        <div class="events-grid">
+          <div class="event-card"><div class="event-banner" style="background:linear-gradient(135deg,#7c3aed20,#2563eb20);">🏆</div><div class="event-body"><div class="event-type">Hackathon</div><div class="event-title">Smart India Hackathon 2025</div><div class="event-meta"><span><i class="fas fa-calendar"></i> Dec 10–12, 2025</span><span><i class="fas fa-home"></i> Online + Hyderabad</span><span><i class="fas fa-rupee-sign"></i> ₹10,00,000 prize pool</span></div></div><div class="event-footer"><span class="seats-left">847 registered</span><button class="btn btn-primary btn-sm">Register</button></div></div>
+          <div class="event-card"><div class="event-banner" style="background:linear-gradient(135deg,#05966920,#14b8a620);">🎯</div><div class="event-body"><div class="event-type">Webinar</div><div class="event-title">Cracking FAANG in 2025 – Insider Tips</div><div class="event-meta"><span><i class="fas fa-calendar"></i> Dec 8, 2025 · 6:00 PM IST</span><span><i class="fas fa-home"></i> Online · Zoom</span><span><i class="fas fa-users"></i> Priya Nair, Google SWE</span></div></div><div class="event-footer"><span class="seats-left">1,204 attending</span><button class="btn btn-outline btn-sm">RSVP</button></div></div>
+          <div class="event-card"><div class="event-banner" style="background:linear-gradient(135deg,#d9770620,#f59e0b20);">🏢</div><div class="event-body"><div class="event-type">Placement Drive</div><div class="event-title">TCS Campus Hiring – NIT Raipur</div><div class="event-meta"><span><i class="fas fa-calendar"></i> Dec 15, 2025</span><span><i class="fas fa-map-marker-alt"></i> NIT Raipur Campus</span><span><i class="fas fa-rupee-sign"></i> CTC ₹7–14 LPA</span></div></div><div class="event-footer"><span class="seats-left">Open for all 2025 batch</span><button class="btn btn-teal btn-sm">Apply</button></div></div>
+          <div class="event-card"><div class="event-banner" style="background:linear-gradient(135deg,#15803d20,#22c55e20);">🔬</div><div class="event-body"><div class="event-type">Industrial Visit</div><div class="event-title">Infosys Digital Innovation Lab Tour</div><div class="event-meta"><span><i class="fas fa-calendar"></i> Dec 20, 2025</span><span><i class="fas fa-map-marker-alt"></i> Infosys Pune Campus</span><span><i class="fas fa-ticket-alt"></i> Free for students</span></div></div><div class="event-footer"><span class="seats-left">40 seats left</span><button class="btn btn-primary btn-sm">Book Seat</button></div></div>
+          <div class="event-card"><div class="event-banner" style="background:linear-gradient(135deg,#be185d20,#ec489920);">💼</div><div class="event-body"><div class="event-type">Workshop</div><div class="event-title">Product Management Bootcamp</div><div class="event-meta"><span><i class="fas fa-calendar"></i> Jan 5–7, 2026</span><span><i class="fas fa-home"></i> Online · Live Sessions</span><span><i class="fas fa-rupee-sign"></i> ₹999 (50% off)</span></div></div><div class="event-footer"><span class="seats-left">220 seats left</span><button class="btn btn-outline btn-sm">Enroll</button></div></div>
+          <div class="event-card"><div class="event-banner" style="background:linear-gradient(135deg,#0369a120,#0ea5e920);">🤖</div><div class="event-body"><div class="event-type">Webinar</div><div class="event-title">Generative AI in Enterprise Applications</div><div class="event-meta"><span><i class="fas fa-calendar"></i> Dec 12, 2025 · 7:30 PM</span><span><i class="fas fa-home"></i> Online · YouTube Live</span><span><i class="fas fa-certificate"></i> Free Certificate</span></div></div><div class="event-footer"><span class="seats-left">Free · Unlimited</span><button class="btn btn-teal btn-sm">Join Free</button></div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== ALUMNI ======================== -->
+<div id="page-alumni" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-users"></i> Alumni</div><div class="sidebar-item" onclick="showPage('mentorship')"><i class="fas fa-chalkboard-teacher"></i> Mentors</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header-row">
+          <div><h1 style="font-size:1.75rem;">Alumni Network</h1><p style="color:var(--text2);">15,000+ alumni across 500+ companies globally</p></div>
+          <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Search by name, company, role..."/></div>
+        </div>
+        <div class="alumni-grid">
+          <div class="alumni-card"><div class="alumni-top"><div class="alumni-av" style="background:linear-gradient(135deg,#7c3aed,#2563eb);">AP</div><div><div class="alumni-name">Arjun Patel</div><div class="alumni-current">SDE-2 · Google</div><div class="alumni-college">NIT Raipur, 2022</div></div></div><p class="alumni-journey">Started with internships on Prashikshan, networked with mentors, and cracked Google in 2 years flat.</p><div class="alumni-btns"><button class="btn btn-primary btn-sm">Connect</button><button class="btn btn-outline btn-sm">Message</button></div></div>
+          <div class="alumni-card"><div class="alumni-top"><div class="alumni-av" style="background:linear-gradient(135deg,#059669,#14b8a6);">PS</div><div><div class="alumni-name">Priya Sharma</div><div class="alumni-current">PM · Razorpay</div><div class="alumni-college">NIT Trichy, 2021</div></div></div><p class="alumni-journey">Used industry projects marketplace to build a fintech portfolio. Placed at ₹24 LPA at Razorpay directly.</p><div class="alumni-btns"><button class="btn btn-primary btn-sm">Connect</button><button class="btn btn-outline btn-sm">Message</button></div></div>
+          <div class="alumni-card"><div class="alumni-top"><div class="alumni-av" style="background:linear-gradient(135deg,#d97706,#f59e0b);">VR</div><div><div class="alumni-name">Varun Reddy</div><div class="alumni-current">Data Scientist · Amazon</div><div class="alumni-college">BITS Pilani, 2020</div></div></div><p class="alumni-journey">Prashikshan's AI assessments and mentorship sessions helped me transition from engineering to data science.</p><div class="alumni-btns"><button class="btn btn-primary btn-sm">Connect</button><button class="btn btn-outline btn-sm">Message</button></div></div>
+          <div class="alumni-card"><div class="alumni-top"><div class="alumni-av" style="background:linear-gradient(135deg,#be185d,#ec4899);">NK</div><div><div class="alumni-name">Neha Krishnan</div><div class="alumni-current">Engineering Manager · Microsoft</div><div class="alumni-college">IIT Bombay, 2018</div></div></div><p class="alumni-journey">Now mentoring 50+ students on Prashikshan. The platform gives back — I owe my career start to connections made here.</p><div class="alumni-btns"><button class="btn btn-primary btn-sm">Connect</button><button class="btn btn-outline btn-sm">Message</button></div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== GAMIFICATION ======================== -->
+<div id="page-gamification" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-trophy"></i> Achievements</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header"><h1>Achievements & Gamification</h1><p>Earn points, unlock badges, and climb the leaderboard</p></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:2rem;">
+          <div style="background:linear-gradient(135deg,var(--blue),var(--teal));border-radius:var(--r-xl);padding:1.5rem;color:#fff;text-align:center;">
+            <div style="font-size:2.5rem;font-weight:800;font-family:'Syne',sans-serif;">8,420</div>
+            <div style="opacity:.8;font-size:.875rem;">Total Points</div>
+          </div>
+          <div style="background:linear-gradient(135deg,var(--amber),#f59e0b);border-radius:var(--r-xl);padding:1.5rem;color:#fff;text-align:center;">
+            <div style="font-size:2.5rem;font-weight:800;font-family:'Syne',sans-serif;">Level 12</div>
+            <div style="opacity:.8;font-size:.875rem;">Career Explorer</div>
+          </div>
+          <div style="background:linear-gradient(135deg,#7c3aed,var(--blue));border-radius:var(--r-xl);padding:1.5rem;color:#fff;text-align:center;">
+            <div style="font-size:2.5rem;font-weight:800;font-family:'Syne',sans-serif;">Rank #4</div>
+            <div style="opacity:.8;font-size:.875rem;">College Leaderboard</div>
+          </div>
+        </div>
+        <h3 style="margin-bottom:1.25rem;">Your Badges</h3>
+        <div class="badge-grid" style="margin-bottom:2rem;">
+          <div class="badge-card earned"><div class="badge-icon">🚀</div><div class="badge-name">First Application</div><div class="badge-desc">Applied to your first internship</div></div>
+          <div class="badge-card earned"><div class="badge-icon">🤖</div><div class="badge-name">AI Explorer</div><div class="badge-desc">Used AI Advisor 5+ times</div></div>
+          <div class="badge-card earned"><div class="badge-icon">📚</div><div class="badge-name">Certified Learner</div><div class="badge-desc">Completed 3+ courses</div></div>
+          <div class="badge-card earned"><div class="badge-icon">💎</div><div class="badge-name">Assessment Ace</div><div class="badge-desc">Scored 90%+ in an assessment</div></div>
+          <div class="badge-card earned"><div class="badge-icon">🤝</div><div class="badge-name">Mentor Connect</div><div class="badge-desc">Booked first mentor session</div></div>
+          <div class="badge-card locked"><div class="badge-icon">🏆</div><div class="badge-name">Placement Star</div><div class="badge-desc">Get selected by a top company</div></div>
+          <div class="badge-card locked"><div class="badge-icon">🌟</div><div class="badge-name">FAANG Achiever</div><div class="badge-desc">Selected by FAANG company</div></div>
+          <div class="badge-card locked"><div class="badge-icon">👑</div><div class="badge-name">Top Ranker</div><div class="badge-desc">Reach #1 on leaderboard</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== ANALYTICS ======================== -->
+<div id="page-analytics" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-chart-line"></i> Analytics</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header"><h1>Career Analytics</h1><p>Track your progress, skill growth, and career trajectory</p></div>
+        <div class="dash-grid">
+          <div class="stat-card"><div class="stat-icon fi-blue"><i class="fas fa-paper-plane"></i></div><div><div class="num">47</div><div class="label">Total Applications</div><div class="change up">↑ 23% vs last month</div></div></div>
+          <div class="stat-card"><div class="stat-icon fi-green"><i class="fas fa-percentage"></i></div><div><div class="num">26%</div><div class="label">Response Rate</div><div class="change up">↑ 8% improvement</div></div></div>
+          <div class="stat-card"><div class="stat-icon fi-teal"><i class="fas fa-star"></i></div><div><div class="num">89</div><div class="label">Skill Score</div><div class="change up">↑ Top 5% batch</div></div></div>
+          <div class="stat-card"><div class="stat-icon fi-amber"><i class="fas fa-clock"></i></div><div><div class="num">248 hrs</div><div class="label">Learning Hours</div><div class="change up">↑ Active learner</div></div></div>
+        </div>
+        <div class="analytics-grid">
+          <div class="card"><div class="card-header"><h3>Application Funnel</h3></div><div class="card-body"><div class="funnel"><div class="funnel-item"><span class="funnel-label">Applied</span><div class="funnel-bar"><div class="funnel-fill" style="width:100%;background:var(--blue);">47</div></div><span class="funnel-count">47</span></div><div class="funnel-item"><span class="funnel-label">Shortlisted</span><div class="funnel-bar"><div class="funnel-fill" style="width:55%;background:var(--teal);">26</div></div><span class="funnel-count">26</span></div><div class="funnel-item"><span class="funnel-label">Interviewed</span><div class="funnel-bar"><div class="funnel-fill" style="width:28%;background:var(--amber);">13</div></div><span class="funnel-count">13</span></div><div class="funnel-item"><span class="funnel-label">Offered</span><div class="funnel-bar"><div class="funnel-fill" style="width:13%;background:var(--green);">6</div></div><span class="funnel-count">6</span></div></div></div></div>
+          <div class="card"><div class="card-header"><h3>Skill Growth</h3></div><div class="card-body"><div class="chart-container-sm"><canvas id="skillGrowthChart"></canvas></div></div></div>
+          <div class="card"><div class="card-header"><h3>Monthly Activity</h3></div><div class="card-body"><div class="chart-container-sm"><canvas id="activityChart"></canvas></div></div></div>
+          <div class="card"><div class="card-header"><h3>Industry Preference</h3></div><div class="card-body"><div class="chart-container-sm"><canvas id="industryChart"></canvas></div></div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== NOTIFICATIONS ======================== -->
+<div id="page-notifications" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-bell"></i> Notifications</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header-row">
+          <div><h1 style="font-size:1.75rem;">Notifications</h1></div>
+          <button class="btn btn-ghost btn-sm">Mark all read</button>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item unread"><div class="notif-i fi-blue"><i class="fas fa-briefcase"></i></div><div class="notif-text"><div class="title">Interview Scheduled – Microsoft</div><div class="body">Your interview for SWE Intern is scheduled for Dec 10, 2025 at 11:00 AM IST. Join via Teams link.</div><div class="time">2 hours ago</div></div></div>
+          <div class="notif-item unread"><div class="notif-i fi-green"><i class="fas fa-check-circle"></i></div><div class="notif-text"><div class="title">Application Shortlisted – Google ML Intern</div><div class="body">Congratulations! You've been shortlisted for the ML Research Intern role at Google. HR will contact you shortly.</div><div class="time">5 hours ago</div></div></div>
+          <div class="notif-item unread"><div class="notif-i fi-teal"><i class="fas fa-chalkboard-teacher"></i></div><div class="notif-text"><div class="title">Mentorship Session Reminder</div><div class="body">Your session with Priya Nair (Google) is tomorrow at 7:00 PM. Prepare your questions in advance.</div><div class="time">8 hours ago</div></div></div>
+          <div class="notif-item"><div class="notif-i fi-amber"><i class="fas fa-certificate"></i></div><div class="notif-text"><div class="title">Certificate Issued – AWS Solutions Architect</div><div class="body">Your AWS Solutions Architect certificate has been issued. Add it to your profile to boost your visibility.</div><div class="time">Yesterday</div></div></div>
+          <div class="notif-item"><div class="notif-i" style="background:#fee2e2;color:var(--red);"><i class="fas fa-times-circle"></i></div><div class="notif-text"><div class="title">Application Update – Swiggy</div><div class="body">Unfortunately, your application for Backend Intern at Swiggy was not selected. Keep applying!</div><div class="time">2 days ago</div></div></div>
+          <div class="notif-item"><div class="notif-i fi-blue"><i class="fas fa-star"></i></div><div class="notif-text"><div class="title">New Course Recommendation</div><div class="body">Based on your career goals, we recommend "Kubernetes & Docker Mastery" to fill your skill gap for DevOps roles.</div><div class="time">3 days ago</div></div></div>
+          <div class="notif-item"><div class="notif-i fi-green"><i class="fas fa-trophy"></i></div><div class="notif-text"><div class="title">Achievement Unlocked – Assessment Ace 🏆</div><div class="body">You scored 94% on DSA Advanced Assessment. Badge has been added to your profile!</div><div class="time">3 days ago</div></div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== MESSAGES ======================== -->
+<div id="page-messages" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item active"><i class="fas fa-comments"></i> Messages</div></div></aside>
+    <main class="main-content">
+      <div class="content-area" style="height:calc(100vh - var(--navbar));overflow:hidden;display:flex;flex-direction:column;">
+        <div class="msg-layout" style="flex:1;">
+          <div class="msg-sidebar">
+            <div class="msg-sidebar-header">
+              <h3>Messages</h3>
+              <div class="search-bar" style="min-width:unset;"><i class="fas fa-search"></i><input type="text" placeholder="Search..."/></div>
+            </div>
+            <div class="conv-list">
+              <div class="conv-item active"><div class="conv-ava" style="background:linear-gradient(135deg,#7c3aed,#2563eb);">PN</div><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;"><span class="conv-name">Priya Nair</span><span class="conv-time">2h</span></div><div class="conv-preview">See you at 7pm for the session!</div></div><div class="conv-unread">2</div></div>
+              <div class="conv-item"><div class="conv-ava" style="background:linear-gradient(135deg,#0369a1,#0ea5e9);">HR</div><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;"><span class="conv-name">Microsoft HR</span><span class="conv-time">5h</span></div><div class="conv-preview">Interview confirmation for Dec 10</div></div></div>
+              <div class="conv-item"><div class="conv-ava" style="background:linear-gradient(135deg,#059669,#22c55e);">RV</div><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;"><span class="conv-name">Rahul Verma</span><span class="conv-time">1d</span></div><div class="conv-preview">Great progress on your DSA!</div></div></div>
+              <div class="conv-item"><div class="conv-ava" style="background:linear-gradient(135deg,#d97706,#f59e0b);">GA</div><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;"><span class="conv-name">Google Recruiter</span><span class="conv-time">2d</span></div><div class="conv-preview">We'd like to schedule your next...</div></div><div class="conv-unread">1</div></div>
+            </div>
+          </div>
+          <div class="msg-main">
+            <div class="msg-main-header">
+              <div class="avatar" style="background:linear-gradient(135deg,#7c3aed,#2563eb);">PN</div>
+              <div><div style="font-weight:700;">Priya Nair</div><div style="font-size:.78rem;color:var(--green);"><i class="fas fa-circle" style="font-size:.5rem;"></i> Online · Senior SWE at Google</div></div>
+            </div>
+            <div class="msg-messages">
+              <div class="msg ai"><div class="msg-avatar" style="background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-size:.8rem;font-weight:700;">PN</div><div class="msg-bubble">Hi Aryan! Looking forward to our session today. Have you prepared the questions you wanted to discuss about system design?</div></div>
+              <div class="msg user"><div class="msg-avatar" style="background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;font-size:.8rem;font-weight:700;">AS</div><div class="msg-bubble">Yes! I have prepared questions around consistent hashing, rate limiting, and designing a notification system like WhatsApp.</div></div>
+              <div class="msg ai"><div class="msg-avatar" style="background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-size:.8rem;font-weight:700;">PN</div><div class="msg-bubble">That's excellent prep! WhatsApp notifications is actually a real Google interview question. See you at 7pm today! 🚀</div></div>
+              <div class="msg user"><div class="msg-avatar" style="background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;font-size:.8rem;font-weight:700;">AS</div><div class="msg-bubble">Thank you so much! See you at 7pm. 🙏</div></div>
+            </div>
+            <div class="msg-input-area">
+              <input class="msg-input" type="text" placeholder="Type a message..."/>
+              <button class="btn btn-primary btn-sm"><i class="fas fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== SETTINGS ======================== -->
+<div id="page-settings" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Navigation</div><div class="sidebar-item" onclick="showPage('student-dashboard')"><i class="fas fa-home"></i> Dashboard</div><div class="sidebar-item" onclick="showPage('profile')"><i class="fas fa-user"></i> Profile</div><div class="sidebar-item active"><i class="fas fa-cog"></i> Settings</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header"><h1>Settings</h1></div>
+        <div class="settings-grid">
+          <div class="settings-nav">
+            <div class="settings-nav-item active">Profile Settings</div>
+            <div class="settings-nav-item" onclick="toggleSettingsNav(this)">Privacy</div>
+            <div class="settings-nav-item" onclick="toggleSettingsNav(this)">Notifications</div>
+            <div class="settings-nav-item" onclick="toggleSettingsNav(this)">Security</div>
+            <div class="settings-nav-item" onclick="toggleSettingsNav(this)">Appearance</div>
+            <div class="settings-nav-item" onclick="toggleSettingsNav(this)">Integrations</div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header"><h3>Profile Information</h3><button class="btn btn-primary btn-sm">Save Changes</button></div>
+              <div class="card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+                  <div class="form-group" style="margin-bottom:0;"><label class="form-label">First Name</label><input type="text" class="form-input" value="Aryan"/></div>
+                  <div class="form-group" style="margin-bottom:0;"><label class="form-label">Last Name</label><input type="text" class="form-input" value="Singh"/></div>
+                </div>
+                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" value="aryan.singh@nitraipur.ac.in"/></div>
+                <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" value="+91 9876543210"/></div>
+                <div class="form-group"><label class="form-label">Location</label><input type="text" class="form-input" value="Raipur, Chhattisgarh"/></div>
+                <div class="form-group"><label class="form-label">Bio</label><textarea class="form-input" rows="3" style="resize:vertical;">B.Tech CSE student at NIT Raipur passionate about AI/ML and full-stack development. Looking for exciting internship opportunities in 2025.</textarea></div>
+              </div>
+            </div>
+            <div class="card" style="margin-top:1.25rem;">
+              <div class="card-header"><h3>Notification Preferences</h3></div>
+              <div class="card-body" style="padding:0 1.5rem;">
+                <div class="toggle-row"><div class="toggle-info"><h4>Internship Alerts</h4><p>Get notified when new matching internships are posted</p></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+                <div class="toggle-row"><div class="toggle-info"><h4>Job Recommendations</h4><p>AI-matched job notifications based on your profile</p></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+                <div class="toggle-row"><div class="toggle-info"><h4>Mentorship Reminders</h4><p>Session reminders and mentor messages</p></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+                <div class="toggle-row"><div class="toggle-info"><h4>Course Updates</h4><p>New lectures, assignments, and course announcements</p></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+                <div class="toggle-row"><div class="toggle-info"><h4>Event Invitations</h4><p>Hackathons, webinars, and placement drive notifications</p></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+                <div class="toggle-row"><div class="toggle-info"><h4>Marketing Emails</h4><p>Product updates and platform announcements</p></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+              </div>
+            </div>
+            <div class="card" style="margin-top:1.25rem;">
+              <div class="card-header"><h3>Appearance</h3></div>
+              <div class="card-body">
+                <div class="toggle-row"><div class="toggle-info"><h4>Dark Mode</h4><p>Switch between light and dark themes</p></div><div class="toggle" id="darkModeToggle" onclick="toggleTheme();this.classList.toggle('on')"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== INDUSTRY DASHBOARD ======================== -->
+<div id="page-industry-dashboard" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Industry Panel</div><div class="sidebar-item active"><i class="fas fa-tachometer-alt"></i> Dashboard</div><div class="sidebar-item"><i class="fas fa-plus"></i> Post Internship</div><div class="sidebar-item"><i class="fas fa-briefcase"></i> Post Job</div><div class="sidebar-item"><i class="fas fa-users"></i> Manage Applications</div><div class="sidebar-item"><i class="fas fa-search"></i> Candidate Search</div><div class="sidebar-item" onclick="showPage('analytics')"><i class="fas fa-chart-line"></i> Analytics</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header"><h1>Industry Partner Dashboard</h1><p>Microsoft India · Hyderabad</p></div>
+        <div class="admin-kpi-grid">
+          <div class="admin-kpi blue"><div class="kpi-label">Total Applications</div><div class="kpi-value">1,247</div><div class="kpi-change">↑ 18% this month</div><div class="kpi-icon">📄</div></div>
+          <div class="admin-kpi teal"><div class="kpi-label">Active Internships</div><div class="kpi-value">24</div><div class="kpi-change">↑ 3 new this week</div><div class="kpi-icon">💼</div></div>
+          <div class="admin-kpi green"><div class="kpi-label">Offers Extended</div><div class="kpi-value">47</div><div class="kpi-change">↑ 92% acceptance rate</div><div class="kpi-icon">✅</div></div>
+          <div class="admin-kpi amber"><div class="kpi-label">Avg. ATS Score</div><div class="kpi-value">74</div><div class="kpi-change">↑ Quality improving</div><div class="kpi-icon">⭐</div></div>
+        </div>
+        <div class="dash-row">
+          <div class="card">
+            <div class="card-header"><h3>Hiring Funnel</h3></div>
+            <div class="card-body">
+              <div class="funnel">
+                <div class="funnel-item"><span class="funnel-label">Applications</span><div class="funnel-bar"><div class="funnel-fill" style="width:100%;background:var(--blue);">1,247</div></div><span class="funnel-count">1,247</span></div>
+                <div class="funnel-item"><span class="funnel-label">Screened</span><div class="funnel-bar"><div class="funnel-fill" style="width:60%;background:var(--teal);">748</div></div><span class="funnel-count">748</span></div>
+                <div class="funnel-item"><span class="funnel-label">Interviewed</span><div class="funnel-bar"><div class="funnel-fill" style="width:25%;background:var(--amber);">312</div></div><span class="funnel-count">312</span></div>
+                <div class="funnel-item"><span class="funnel-label">Offered</span><div class="funnel-bar"><div class="funnel-fill" style="width:10%;background:var(--green);">47</div></div><span class="funnel-count">47</span></div>
+                <div class="funnel-item"><span class="funnel-label">Joined</span><div class="funnel-bar"><div class="funnel-fill" style="width:8%;background:#7c3aed;">28</div></div><span class="funnel-count">28</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Top Applications</h3></div>
+            <div class="card-body" style="padding:0;">
+              <table class="data-table">
+                <thead><tr><th>Candidate</th><th>Score</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Aryan Singh</strong><div style="font-size:.75rem;color:var(--text3);">NIT Raipur · CSE</div></td><td><span style="font-weight:700;color:var(--green);">96%</span></td><td><span class="status-badge status-interview">Interview</span></td></tr>
+                  <tr><td><strong>Sanya Khanna</strong><div style="font-size:.75rem;color:var(--text3);">IIT Delhi · CSE</div></td><td><span style="font-weight:700;color:var(--green);">94%</span></td><td><span class="status-badge status-active">Shortlisted</span></td></tr>
+                  <tr><td><strong>Rohan Patil</strong><div style="font-size:.75rem;color:var(--text3);">VIT Pune · IT</div></td><td><span style="font-weight:700;color:var(--amber);">88%</span></td><td><span class="status-badge status-pending">Pending</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======================== ADMIN PANEL ======================== -->
+<div id="page-admin" class="page">
+  <div class="dashboard-layout">
+    <aside class="sidebar"><div class="sidebar-section"><div class="sidebar-label">Admin Panel</div><div class="sidebar-item active"><i class="fas fa-tachometer-alt"></i> Overview</div><div class="sidebar-item"><i class="fas fa-users"></i> Users</div><div class="sidebar-item"><i class="fas fa-university"></i> Institutions</div><div class="sidebar-item"><i class="fas fa-building"></i> Industry</div><div class="sidebar-item"><i class="fas fa-file-alt"></i> Content</div><div class="sidebar-item"><i class="fas fa-chart-pie"></i> Reports</div><div class="sidebar-item"><i class="fas fa-shield-alt"></i> Security</div><div class="sidebar-item"><i class="fas fa-robot"></i> AI Monitor</div></div></aside>
+    <main class="main-content">
+      <div class="content-area">
+        <div class="page-header"><h1>Admin Dashboard</h1><p>Platform-wide analytics and management</p></div>
+        <div class="admin-kpi-grid">
+          <div class="admin-kpi blue"><div class="kpi-label">Total Users</div><div class="kpi-value">1,08,450</div><div class="kpi-change">↑ 12% this month</div><div class="kpi-icon">👥</div></div>
+          <div class="admin-kpi teal"><div class="kpi-label">Active Colleges</div><div class="kpi-value">512</div><div class="kpi-change">↑ 28 new this quarter</div><div class="kpi-icon">🏫</div></div>
+          <div class="admin-kpi green"><div class="kpi-label">Industry Partners</div><div class="kpi-value">1,089</div><div class="kpi-change">↑ 5% growth</div><div class="kpi-icon">🏢</div></div>
+          <div class="admin-kpi amber"><div class="kpi-label">Placements (YTD)</div><div class="kpi-value">26,847</div><div class="kpi-change">↑ Record high 2025</div><div class="kpi-icon">🎯</div></div>
+        </div>
+        <div class="dash-row">
+          <div class="card">
+            <div class="card-header"><h3>Platform Growth</h3></div>
+            <div class="card-body"><div class="chart-container"><canvas id="platformGrowthChart"></canvas></div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>User Distribution</h3></div>
+            <div class="card-body"><div class="chart-container"><canvas id="userPieChart"></canvas></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Recent Platform Activity</h3></div>
+          <div class="card-body" style="padding:0;">
+            <table class="data-table">
+              <thead><tr><th>Action</th><th>Entity</th><th>User</th><th>Time</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>New Institution</td><td>NIT Raipur, CG</td><td>admin@nitraipur.ac.in</td><td>5 min ago</td><td><span class="status-badge status-active">Approved</span></td></tr>
+                <tr><td>Industry Partner</td><td>Razorpay Technologies</td><td>hr@razorpay.com</td><td>12 min ago</td><td><span class="status-badge status-pending">Pending</span></td></tr>
+                <tr><td>Content Flagged</td><td>Job Post #4821</td><td>System AI</td><td>34 min ago</td><td><span class="status-badge status-rejected">Review Needed</span></td></tr>
+                <tr><td>Bulk Registration</td><td>IIT Bombay – 842 students</td><td>placement@iitb.ac.in</td><td>1 hr ago</td><td><span class="status-badge status-active">Completed</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+let currentPage = 'landing';
+let isLoggedIn = false;
+let isDark = false;
+let chartsInitialized = {};
+
+// ===== PAGE NAVIGATION =====
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg = document.getElementById('page-'+id);
+  if(pg){ pg.classList.add('active'); currentPage=id; window.scrollTo(0,0); }
+  
+  // Show/hide sidebar for dashboard pages
+  const dashPages=['student-dashboard','profile','internships','jobs','ai-advisor','resume-analyzer','interview-coach','mentorship','projects','assessments','lms','events','alumni','gamification','analytics','notifications','messages','settings','industry-dashboard','admin'];
+  const isLanding = ['landing','login','register','forgot-password'].includes(id);
+  
+  document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+  
+  // Initialize charts after page shows
+  setTimeout(()=>{
+    if(id==='student-dashboard') initDashCharts();
+    if(id==='analytics') initAnalyticsCharts();
+    if(id==='admin') initAdminCharts();
+  }, 100);
+  
+  // Animate stats on landing
+  if(id==='landing') animateCounters();
+}
+
+// ===== THEME =====
+function toggleTheme(){
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('themeIcon').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+  // Re-init charts for new theme
+  chartsInitialized = {};
+  Object.values(Chart.instances || {}).forEach(c=>c.destroy());
+  setTimeout(()=>{
+    if(currentPage==='student-dashboard') initDashCharts();
+    if(currentPage==='analytics') initAnalyticsCharts();
+    if(currentPage==='admin') initAdminCharts();
+  },50);
+}
+
+// ===== LOGIN ACTION =====
+function loginAction(){
+  isLoggedIn = true;
+  document.getElementById('loginBtn').style.display='none';
+  document.getElementById('regBtn').style.display='none';
+  document.getElementById('userAvatar').style.display='flex';
+  showPage('student-dashboard');
+}
+
+// ===== COUNTER ANIMATION =====
+function animateCounters(){
+  const counters = document.querySelectorAll('[data-target]');
+  counters.forEach(el=>{
+    const target = parseInt(el.getAttribute('data-target'));
+    let current = 0;
+    const step = target/60;
+    const timer = setInterval(()=>{
+      current+=step;
+      if(current>=target){current=target;clearInterval(timer);}
+      el.textContent = formatNum(Math.floor(current));
+    },20);
+  });
+}
+function formatNum(n){
+  if(n>=100000) return Math.floor(n/1000)+'k+';
+  if(n>=1000) return (n/1000).toFixed(n%1000===0?0:1)+'k+';
+  return n+'+';
+}
+
+// ===== ROLE SELECT =====
+function selectRole(el){
+  el.closest('.role-select').querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ===== FILTER TOGGLE =====
+function toggleFilter(el){
+  el.closest('.filter-row').querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===== SETTINGS NAV =====
+function toggleSettingsNav(el){
+  el.closest('.settings-nav').querySelectorAll('.settings-nav-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===== RESUME ANALYZER =====
+function analyzeResume(){
+  document.getElementById('resumeResults').style.display='block';
+  document.getElementById('resumePlaceholder').style.display='none';
+}
+
+// ===== AI CHAT =====
+const aiResponses = {
+  "skills": "Based on your profile, here are the top skills for SDE roles in 2025:\n\n🔷 **Core**: Data Structures, Algorithms, System Design\n🔷 **Languages**: Python, Go, TypeScript\n🔷 **Cloud**: AWS/GCP, Kubernetes, Docker\n🔷 **AI/ML**: LLMs, MLOps, Vector Databases\n\nYou already have a strong foundation! I'd recommend focusing on Kubernetes and Go to be competitive for senior SDE roles.",
+  "google": "For your Google SWE role, here's your skill gap analysis:\n\n✅ **Strong**: Python, React, System Design basics\n⚠️ **Needs Work**: Distributed Systems, Kubernetes\n❌ **Missing**: Go, MapReduce patterns, Large-scale ML\n\nI recommend spending 3–4 months on system design deep-dives and Go programming to close these gaps.",
+  "roadmap": "Here's your personalized 3-month career roadmap:\n\n**Month 1 – Foundation**\n• Complete DSA revision (LeetCode 150)\n• Start AWS certification\n\n**Month 2 – Application**\n• Build 2 production-quality projects\n• Apply to 5+ internships/week\n\n**Month 3 – Interview Prep**\n• Mock interviews daily\n• Mentorship sessions 2x/week\n\nAt this pace, you're on track for top-tier placements! 🚀",
+  "faang": "Top tips for cracking FAANG interviews:\n\n🎯 **Coding**: Solve 300+ LeetCode problems (Easy: 50, Medium: 200, Hard: 50)\n🏗️ **System Design**: Study Grokking System Design, practice 20+ designs\n💬 **Behavioral**: Prepare 15 STAR stories using Amazon Leadership Principles\n🧠 **Mental Prep**: Mock interviews 3x/week for the last 2 months\n\nYour current 89% skill score is excellent — you're already in the top 10% of candidates!",
+  "default": "Great question! Based on your profile (NIT Raipur, CSE, 3rd year, 89% skill score), you're well-positioned for top-tier opportunities.\n\n💡 **My recommendations**:\n1. Focus on system design (your #1 weakness based on assessment history)\n2. Apply to 3–5 more internships this week\n3. Book a mentorship session with Rahul Verma (Microsoft) for DSA guidance\n\nWhat specific aspect would you like to explore further?"
+};
+function sendQuick(text){
+  const input = document.getElementById('chatInput');
+  input.value = text;
+  sendMessage();
+}
+function sendMessage(){
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += `<div class="msg user" style="align-self:flex-end;flex-direction:row-reverse;"><div class="msg-avatar" style="background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;font-size:.8rem;font-weight:700;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">AS</div><div class="msg-bubble" style="background:var(--blue);color:#fff;padding:.75rem 1rem;border-radius:var(--r-lg);border-bottom-right-radius:4px;font-size:.9rem;line-height:1.6;">${text}</div></div>`;
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(()=>{
+    let resp = aiResponses.default;
+    if(text.toLowerCase().includes('skill')&&!text.toLowerCase().includes('gap')) resp=aiResponses.skills;
+    if(text.toLowerCase().includes('google')||text.toLowerCase().includes('gap')) resp=aiResponses.google;
+    if(text.toLowerCase().includes('roadmap')) resp=aiResponses.roadmap;
+    if(text.toLowerCase().includes('faang')||text.toLowerCase().includes('crack')) resp=aiResponses.faang;
+    const formatted = resp.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br/>');
+    msgs.innerHTML += `<div class="msg ai" style="display:flex;gap:.75rem;max-width:80%;"><div class="msg-avatar" style="background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;"><i class="fas fa-robot"></i></div><div class="msg-bubble" style="background:var(--bg2);color:var(--text);padding:.75rem 1rem;border-radius:var(--r-lg);border-bottom-left-radius:4px;font-size:.9rem;line-height:1.6;">${formatted}</div></div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  },600);
+}
+function handleChatKey(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} }
+function clearChat(){
+  document.getElementById('chatMessages').innerHTML=`<div class="msg ai"><div class="msg-avatar" style="background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas fa-robot"></i></div><div class="msg-bubble" style="background:var(--bg2);color:var(--text);padding:.75rem 1rem;border-radius:var(--r-lg);border-bottom-left-radius:4px;font-size:.9rem;line-height:1.6;">👋 Hi Aryan! New conversation started. What can I help you with today?</div></div>`;
+}
+
+// ===== CHART HELPERS =====
+function getChartDefaults(){
+  const dark = isDark;
+  return {
+    textColor: dark ? '#94A3B8' : '#475569',
+    gridColor: dark ? '#1E293B' : '#E2E8F0',
+    bg: dark ? '#131C2E' : '#fff'
+  };
+}
+function destroyChart(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const existing = Chart.getChart(el);
+  if(existing) existing.destroy();
+}
+
+// ===== DASHBOARD CHARTS =====
+function initDashCharts(){
+  const d = getChartDefaults();
+  
+  // Application chart
+  destroyChart('appChart');
+  const ac = document.getElementById('appChart');
+  if(ac) new Chart(ac,{type:'bar',data:{labels:['Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'Applications',data:[4,7,12,8,15,12],backgroundColor:isDark?'rgba(37,99,235,.7)':'rgba(37,99,235,.85)',borderRadius:6},{label:'Interviews',data:[1,2,4,3,6,3],backgroundColor:isDark?'rgba(20,184,166,.7)':'rgba(20,184,166,.85)',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:d.textColor}}},scales:{x:{ticks:{color:d.textColor},grid:{color:d.gridColor}},y:{ticks:{color:d.textColor},grid:{color:d.gridColor}}}}});
+
+  // Skill radar
+  destroyChart('skillChart');
+  const sc = document.getElementById('skillChart');
+  if(sc) new Chart(sc,{type:'radar',data:{labels:['DSA','System Design','Frontend','Backend','ML/AI','DevOps'],datasets:[{label:'Your Score',data:[88,72,95,85,80,65],backgroundColor:'rgba(37,99,235,.2)',borderColor:'#2563EB',pointBackgroundColor:'#2563EB'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:d.textColor}}},scales:{r:{ticks:{color:d.textColor,backdropColor:'transparent'},grid:{color:d.gridColor},pointLabels:{color:d.textColor}}}}});
+}
+
+// ===== ANALYTICS CHARTS =====
+function initAnalyticsCharts(){
+  const d = getChartDefaults();
+  
+  destroyChart('skillGrowthChart');
+  const sgc = document.getElementById('skillGrowthChart');
+  if(sgc) new Chart(sgc,{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'Skill Score',data:[60,63,67,70,72,74,78,81,84,86,88,89],borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,.1)',fill:true,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:d.textColor}}},scales:{x:{ticks:{color:d.textColor},grid:{color:d.gridColor}},y:{ticks:{color:d.textColor},grid:{color:d.gridColor},min:50,max:100}}}});
+
+  destroyChart('activityChart');
+  const act = document.getElementById('activityChart');
+  if(act) new Chart(act,{type:'bar',data:{labels:['Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'Applications',data:[4,7,12,8,15,12],backgroundColor:'rgba(37,99,235,.8)',borderRadius:4},{label:'Courses',data:[2,3,1,4,2,3],backgroundColor:'rgba(20,184,166,.8)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:d.textColor}}},scales:{x:{ticks:{color:d.textColor},grid:{color:d.gridColor}},y:{ticks:{color:d.textColor},grid:{color:d.gridColor}}}}});
+
+  destroyChart('industryChart');
+  const ic = document.getElementById('industryChart');
+  if(ic) new Chart(ic,{type:'doughnut',data:{labels:['Tech/IT','Finance','Product','Consulting','Research'],datasets:[{data:[45,20,18,10,7],backgroundColor:['#2563EB','#14B8A6','#F59E0B','#22C55E','#7c3aed'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:d.textColor,padding:12}}}}});
+}
+
+// ===== ADMIN CHARTS =====
+function initAdminCharts(){
+  const d = getChartDefaults();
+  
+  destroyChart('platformGrowthChart');
+  const pg = document.getElementById('platformGrowthChart');
+  if(pg) new Chart(pg,{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'Users (K)',data:[60,68,74,82,91,98,104,109,115,118,122,108],borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,.1)',fill:true,tension:.4},{label:'Placements (K)',data:[5,8,10,14,16,18,21,23,25,24,26,27],borderColor:'#14B8A6',backgroundColor:'rgba(20,184,166,.05)',fill:true,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:d.textColor}}},scales:{x:{ticks:{color:d.textColor},grid:{color:d.gridColor}},y:{ticks:{color:d.textColor},grid:{color:d.gridColor}}}}});
+
+  destroyChart('userPieChart');
+  const up = document.getElementById('userPieChart');
+  if(up) new Chart(up,{type:'doughnut',data:{labels:['Students','Faculty','Industry','Mentors','TPOs','Admins'],datasets:[{data:[75,10,8,4,2,1],backgroundColor:['#2563EB','#14B8A6','#F59E0B','#22C55E','#7c3aed','#EF4444'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:d.textColor,padding:10}}}}});
+}
+
+// ===== INIT =====
+window.addEventListener('load',()=>{
+  // Animate counters on load
+  setTimeout(animateCounters, 300);
+  // Check URL hash for direct navigation (demo)
+  const hash = window.location.hash.replace('#','');
+  if(hash) showPage(hash);
+});
+
+// Keyboard navigation
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape' && currentPage!=='landing') showPage('landing');
+});
+</script>
+</body>
+</html>
